@@ -30,11 +30,36 @@ namespace BookNest.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUser([FromBody] InsertUserDto dto)
+        public async Task<IActionResult> AddUser([FromBody] InsertUserDto dto)
         {
-            _userService.AddUser(dto);
-            return Ok("User added successfully.");
+            try
+            {
+                await _userService.AddUser(dto);
+                return Ok(new { message = "User added successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
+        {
+            var user = await _userService.ValidateUserAsync(dto);
+
+            if (user != null)
+            {
+                return Ok(new
+                {
+                    message = "Login successful.",
+                    role = user.Role 
+                });
+            }
+
+            return Unauthorized(new { error = "Invalid credentials." });
+        }
+
 
         [HttpPut("{id}")]
         public IActionResult UpdateUser(Guid id, [FromBody] UpdateUserDto dto)

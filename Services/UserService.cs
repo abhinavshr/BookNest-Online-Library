@@ -2,36 +2,54 @@
 using BookNest.Entities;
 using BookNest.Services.Interface;
 using First.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace First.Services
 {
     public class UserService : IUserService
     {
-        public readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public UserService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public void AddUser(InsertUserDto userDto)
+        // Async method to add a user
+        public async Task AddUser(InsertUserDto userDto)
         {
             try
             {
+                var existingUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == userDto.Email.ToLower());
+                if (existingUser != null)
+                    throw new Exception("Email already exists.");
+
+                string membershipId;
+                do
+                {
+                    membershipId = new Random().Next(1000, 9999).ToString();
+                } while (await _context.Users.AnyAsync(u => u.MembershipID == membershipId));
+
                 var user = new User
                 {
+                    UserId = Guid.NewGuid(),
                     Name = userDto.Name,
                     Email = userDto.Email,
                     PasswordHash = userDto.Password,
-                    Role = userDto.Role,
-                    MembershipID = userDto.MembershipID,
-                    RegistrationDate = userDto.RegistrationDate,
-                    OrderCount = userDto.OrderCount,
-                    IsActive = userDto.IsActive
+                    Role = "User",
+                    MembershipID = membershipId,
+                    RegistrationDate = DateTime.UtcNow,
+                    OrderCount = 0,
+                    IsActive = true
                 };
 
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -39,16 +57,29 @@ namespace First.Services
             }
         }
 
-        public void DeleteUser(Guid id)
+        public async Task<User> ValidateUserAsync(LoginDto dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == dto.Email.ToLower() && u.PasswordHash == dto.Password);
+
+            return user;
+        }
+
+
+
+
+        // Async method to delete a user
+        public async Task DeleteUser(Guid id)
         {
             try
             {
-                var user = _context.Users.FirstOrDefault(u => u.UserId == id);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
                 if (user == null)
                     throw new Exception("User Not Found");
 
+                // Remove user from the database
                 _context.Users.Remove(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -56,30 +87,29 @@ namespace First.Services
             }
         }
 
-        public List<GetAllUserDto> GetAllUsers()
+        // Async method to get all users
+        public async Task<List<GetAllUserDto>> GetAllUsers()
         {
             try
             {
-                var users = _context.Users.Where(u => u.IsActive).ToList();
+                var users = await _context.Users
+                    .Where(u => u.IsActive)
+                    .ToListAsync();
 
                 if (users == null || !users.Any())
                     throw new Exception("No active users found");
 
-                var result = new List<GetAllUserDto>();
-
-                foreach (var u in users)
+                var result = users.Select(u => new GetAllUserDto
                 {
-                    result.Add(new GetAllUserDto
-                    {
-                        Name = u.Name,
-                        Email = u.Email,
-                        Role = u.Role,
-                        MembershipID = u.MembershipID,
-                        RegistrationDate = u.RegistrationDate,
-                        OrderCount = u.OrderCount,
-                        IsActive = u.IsActive
-                    });
-                }
+                    Name = u.Name,
+                    Email = u.Email,
+                    Role = u.Role,
+                    MembershipID = u.MembershipID,
+                    RegistrationDate = u.RegistrationDate,
+                    OrderCount = u.OrderCount,
+                    IsActive = u.IsActive
+                }).ToList();
+
                 return result;
             }
             catch (Exception ex)
@@ -88,16 +118,17 @@ namespace First.Services
             }
         }
 
-        public GetAllUserDto GetById(Guid id)
+        // Async method to get a user by Id
+        public async Task<GetAllUserDto> GetById(Guid id)
         {
             try
             {
-                var user = _context.Users.FirstOrDefault(u => u.UserId == id);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
 
                 if (user == null)
                     throw new Exception("User Not Found");
 
-                var result = new GetAllUserDto()
+                return new GetAllUserDto
                 {
                     Name = user.Name,
                     Email = user.Email,
@@ -107,8 +138,6 @@ namespace First.Services
                     OrderCount = user.OrderCount,
                     IsActive = user.IsActive
                 };
-
-                return result;
             }
             catch (Exception ex)
             {
@@ -116,11 +145,12 @@ namespace First.Services
             }
         }
 
-        public void UpdateUser(Guid id, UpdateUserDto userDto)
+        // Async method to update a user
+        public async Task UpdateUser(Guid id, UpdateUserDto userDto)
         {
             try
             {
-                var user = _context.Users.FirstOrDefault(u => u.UserId == id);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
 
                 if (user == null)
                     throw new Exception("User Not Found");
@@ -134,7 +164,7 @@ namespace First.Services
                 user.IsActive = userDto.IsActive;
 
                 _context.Users.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

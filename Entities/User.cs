@@ -12,7 +12,8 @@ namespace BookNest.Entities
 
         [Required] public string PasswordHash { get; set; }
 
-        [Required] public string Role { get; set; }
+        [Required]
+        public string Role { get; set; }
 
         public string? MembershipID { get; set; }
 
