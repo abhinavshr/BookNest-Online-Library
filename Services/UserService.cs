@@ -59,12 +59,22 @@ namespace First.Services
 
         public async Task<User> ValidateUserAsync(LoginDto dto)
         {
+            Console.WriteLine($"Attempting to find user with email: {dto.Email}");
+
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == dto.Email.ToLower() && u.PasswordHash == dto.Password);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == dto.Email.ToLower());
+
+            if (user == null)
+            {
+                Console.WriteLine($"No user found with email: {dto.Email}");
+            }
+            else
+            {
+                Console.WriteLine($"User found: {user.Name}, Role: {user.Role}");
+            }
 
             return user;
         }
-
 
 
 

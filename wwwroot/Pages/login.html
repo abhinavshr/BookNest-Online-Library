@@ -17,7 +17,7 @@
 
             <input type="submit" value="Login">
         </form>
-        <div id="loginResponse"></div>
+        <div id="responseMessage"></div>
     </div>
 
     <script>
@@ -32,7 +32,7 @@
                 password: password
             };
 
-            fetch('/api/users/login', {
+            fetch('http://localhost:5223/api/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,10 +41,13 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     if (data.message === "Login successful.") {
+                        const token = data.token;
+                        localStorage.setItem("jwtToken", token);
                         const role = data.role;
                         if (role === 'User') {
-                            window.location.href = '../index.html'; 
+                            window.location.href = '../index.html';
                         } else if (role === 'Admin' || role === 'Staff') {
                             window.location.href = 'Admin/admindashboard.html';
                         }
@@ -53,11 +56,10 @@
                     }
                 })
                 .catch(error => {
+                    console.log('Error:', error);
                     document.getElementById("responseMessage").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
                 });
         });
     </script>
-
-
 </body>
 </html>

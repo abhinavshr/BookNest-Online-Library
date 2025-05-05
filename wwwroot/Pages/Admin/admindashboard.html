@@ -1,10 +1,35 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
 </head>
 <body>
+    <h1>Welcome to the Admin Dashboard</h1>
+    <div id="content">
+    </div>
 
+    <script>
+        const token = localStorage.getItem("jwtToken");
+
+        if (!token) {
+            window.location.href = '../login.html';
+        } else {
+            const decodedToken = parseJwt(token);
+            if (decodedToken.role !== 'Admin' && decodedToken.role !== 'Staff') {
+                window.location.href = '../login.html';
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+    </script>
 </body>
 </html>
