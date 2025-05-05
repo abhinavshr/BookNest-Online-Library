@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../../../css/navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+
+    <div class="sidebar">
+        <span style="padding: 14px 20px; font-size: 25px; font-weight: 700; color: #ffffff; display: block;">BookNest</span>
+        <div class="nav-info active">
+            <span class="material-icons" style="color: white;">dashboard</span><a data-page="admindashboard">Dashboard</a>
+
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">group</span>
+
+            <a data-page="staff_page">Staff Management</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">person</span>
+
+            <a data-page="authorpage">Author Management</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">category</span>
+
+            <a data-page="genrespage">Genres Management</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">article</span>
+
+            <a data-page="publicationpage">Publication Management</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">book</span>
+
+            <a data-page="bookpage">Book Management</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">shopping_cart</span>
+
+            <a data-page="orderpage">Order Management</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">announcement</span>
+
+            <a data-page="announcementpage">Announcement</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">local_offer</span>
+
+            <a data-page="discountspage">Discounts</a>
+        </div>
+        <div class="nav-info">
+            <span class="material-icons" style="color: white;">logout</span>
+
+            <a data-page="logout">Logout</a>
+        </div>
+
+
+
+
+
+
+
+
+    </div>
+
+    <div class="main-container">
+        <div class="top-bar" id="topBar">
+            <span class="material-icons">menu</span>
+
+            <span style="font-size: 23px; font-weight: 700; margin-left: 10px;" id="pageTitle">Welcome to Admin Dashboard</span>
+        </div>
+
+        <div class="main-content" id="mainContent">
+            <p>Select an option from the sidebar.</p>
+        </div>
+    </div>
+
+    <script>
+        const links = document.querySelectorAll('.nav-info');
+        const contentDiv = document.getElementById('mainContent');
+        const pageTitle = document.getElementById('pageTitle');
+
+        function loadPage(url, title = '') {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error('Page not found');
+                    return response.text();
+                })
+                .then(html => {
+                    contentDiv.innerHTML = html;
+                    if (title) pageTitle.innerText = title;
+
+                    // Add support for internal buttons/links
+                    bindInternalLinks();
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = `<h2>Error loading page: ${url}</h2>`;
+                });
+        }
+
+        function bindInternalLinks() {
+            // For example: inside staffpage.html > "Add New Staff"
+            const internalLinks = contentDiv.querySelectorAll('[data-page]');
+            internalLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const subPage = this.getAttribute('data-page');
+                    const subUrl = `../${subPage}.html`;
+                    loadPage(subUrl); // no title change here for sub-pages
+                });
+            });
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                const page = link.querySelector('a')?.getAttribute('data-page');
+                const title = link.querySelector('a')?.innerText || 'Admin Panel';
+                if (!page) {
+                    contentDiv.innerHTML = `<p>No page defined for this item.</p>`;
+                    return;
+                }
+
+                const url = `../${page}.html`;
+                loadPage(url, title);
+            });
+        });
+
+        // Trigger initial load
+        document.querySelector('.nav-info.active')?.click();
+    </script>
+
+</body>
+</html>
