@@ -5,7 +5,8 @@ namespace BookNest.Services.Interface
 {
     public interface IUserService
     {
-        Task AddUser(InsertUserDto userDto); 
+        Task AddUser(InsertUserDto userDto);
+        Task AddStaff(InsertUserDto userDto);
         Task<List<GetAllUserDto>> GetAllUsers();
         Task<User> ValidateUserAsync(LoginDto dto);
         Task<GetAllUserDto> GetById(Guid id); 

@@ -51,6 +51,21 @@ namespace BookNest.Controllers
             }
         }
 
+        [HttpPost("addstaff")]
+        public async Task<IActionResult> AddStaff([FromBody] InsertUserDto dto)
+        {
+            try
+            {
+                await _userService.AddStaff(dto);
+                return Ok(new { message = "Staff added successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {

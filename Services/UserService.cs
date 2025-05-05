@@ -57,6 +57,43 @@ namespace First.Services
             }
         }
 
+        public async Task AddStaff(InsertUserDto userDto)
+        {
+            try
+            {
+                var existingUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == userDto.Email.ToLower());
+                if (existingUser != null)
+                    throw new Exception("Email already exists.");
+
+                string membershipId;
+                do
+                {
+                    membershipId = new Random().Next(1000, 9999).ToString();
+                } while (await _context.Users.AnyAsync(u => u.MembershipID == membershipId));
+
+                var user = new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Name = userDto.Name,
+                    Email = userDto.Email,
+                    PasswordHash = userDto.Password,
+                    Role = "Staff",
+                    MembershipID = membershipId,
+                    RegistrationDate = DateTime.UtcNow,
+                    OrderCount = 0,
+                    IsActive = true
+                };
+
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding user: " + ex.Message);
+            }
+        }
+
         public async Task<User> ValidateUserAsync(LoginDto dto)
         {
             Console.WriteLine($"Attempting to find user with email: {dto.Email}");
