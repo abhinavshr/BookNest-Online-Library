@@ -57,46 +57,48 @@
     </div>
 
     <script>
-        //const token = localStorage.getItem("jwtToken");
+        const token = localStorage.getItem("jwtToken");
 
-        //if (!token) {
-        //    window.location.href = '../login.html';
-        //} else {
-        //    const decodedToken = parseJwt(token);
-        //    if (decodedToken.role !== 'Admin' && decodedToken.role !== 'Staff') {
-        //        window.location.href = '../login.html';
-        //    }
-        //}
+        if (!token) {
+            window.location.href = '../login.html';
+        } else {
+            const decodedToken = parseJwt(token);
+            if (decodedToken.role !== 'Admin' && decodedToken.role !== 'Staff') {
+                window.location.href = '../login.html';
+            }
+        }
 
-        //function parseJwt(token) {
-        //    const base64Url = token.split('.')[1];
-        //    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        //    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-        //        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        //    }).join(''));
-        //    return JSON.parse(jsonPayload);
-        //}
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
 
         async function fetchAnnouncementData() {
             try {
                 const response = await fetch('http://localhost:5223/api/announcement');
-                if (!response.ok) throw new Error('Failed to fetch announcements');
-                const announcementList = await response.json();
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
 
+                const announcementList = await response.json();
                 const tbody = document.querySelector('.custom-table tbody');
                 tbody.innerHTML = '';
 
                 announcementList.forEach((announcement, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${announcement.announcementId}</td>
-                            <td>${announcement.title}</td>
-                            <td>${announcement.message}</td>
-                            <td>${announcement.startDate}</td>
-                            <td>${announcement.endDate}</td>
-                            <td><button onclick="deleteAnnouncement('${announcement.announcementId}')">Delete</button></td>
-                        `;
+                <td>${index + 1}</td>
+                <td>${announcement.announcementId}</td>
+                <td>${announcement.title}</td>
+                <td>${announcement.message}</td>
+                <td>${announcement.startDate}</td>
+                <td>${announcement.endDate}</td>
+                <td><button onclick="deleteAnnouncement('${announcement.announcementId}')">Delete</button></td>
+            `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
@@ -104,10 +106,12 @@
             }
         }
 
+
+
         function deleteAnnouncement(announcementId) {
             if (confirm(`Are you sure you want to delete announcement with ID ${announcementId}?`)) {
                 console.log(`Deleting announcement: ${announcementId}`);
-                // You can add your actual delete API logic here
+                // Add actual delete logic here by calling the delete API endpoint
             }
         }
 
@@ -125,7 +129,8 @@
 
         function logout() {
             alert("Logging out...");
-            // Add actual logout logic if needed
+            localStorage.removeItem("jwtToken");
+            window.location.href = '../login.html';
         }
     </script>
 </body>

@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Announcement</title>
     <link rel="stylesheet" href="../../css/addannouncement.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div id="sidebar">
@@ -73,21 +71,19 @@
                     return response.json();
                 })
                 .then(result => {
-                    document.getElementById("responseMessage").innerHTML =
-                        `<p class="success">Announcement added successfully! Redirecting...</p>`;
+                    document.getElementById("responseMessage").innerText = "Announcement added successfully! Redirecting...";
                     setTimeout(() => {
                         window.location.href = "announcement.html";
                     }, 1000);
                 })
                 .catch(error => {
-                    document.getElementById("responseMessage").innerHTML =
-                        `<p class="error">Error: ${error.message}</p>`;
+                    document.getElementById("responseMessage").innerText = "Error: " + error.message;
                 });
         });
 
         function logout() {
             alert("Logging out...");
-            // Add actual logout logic here
+            // You can also clear tokens or redirect here
         }
     </script>
 </body>

@@ -30,7 +30,7 @@
                     <input class="search-customize" type="search" placeholder="Search..." />
                 </div>
                 <div class="add-bar" id="add-discount-container">
-                    <a href="adddiscount.html" class="add-discount-button">
+                    <a href="adddiscounts.html" class="add-discount-button">
                         <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">add</span>
                         Add New Discount
                     </a>
@@ -52,7 +52,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Populated via JS -->
                     </tbody>
                 </table>
             </div>
@@ -62,7 +61,7 @@
     <script>
         async function fetchDiscounts() {
             try {
-                const response = await fetch('http://localhost:5223/api/discounts');
+                const response = await fetch('http://localhost:5223/api/discounts/all');
                 if (!response.ok) throw new Error('Failed to fetch discounts');
                 const data = await response.json();
 
@@ -71,16 +70,16 @@
                 data.forEach((discount, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${discount.discountId}</td>
-                        <td>${discount.bookId}</td>
-                        <td>${discount.discountType}</td>
-                        <td>${discount.value}</td>
-                        <td>${discount.isOnSale ? 'Yes' : 'No'}</td>
-                        <td>${discount.startDate}</td>
-                        <td>${discount.endDate}</td>
-                        <td><button onclick="deleteDiscount('${discount.discountId}')">Delete</button></td>
-                    `;
+                            <td>${index + 1}</td>
+                            <td>${discount.discountId}</td>
+                            <td>${discount.bookId}</td>
+                            <td>${discount.discountType}</td>
+                            <td>${discount.value}</td>
+                            <td>${discount.isOnSale ? 'Yes' : 'No'}</td>
+                            <td>${new Date(discount.startDate).toLocaleDateString()}</td>
+                            <td>${new Date(discount.endDate).toLocaleDateString()}</td>
+                            <td><button onclick="deleteDiscount('${discount.discountId}')">Delete</button></td>
+                        `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
@@ -88,10 +87,23 @@
             }
         }
 
-        function deleteDiscount(discountId) {
+        async function deleteDiscount(discountId) {
             if (confirm(`Are you sure you want to delete discount ID ${discountId}?`)) {
-                console.log("Deleting discount:", discountId);
-                // API call here
+                try {
+                    const response = await fetch(`http://localhost:5223/api/discounts/${discountId}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to delete discount');
+                    }
+
+                    alert('Discount deleted successfully!');
+                    fetchDiscounts(); 
+                } catch (error) {
+                    console.error('Error deleting discount:', error);
+                    alert('Error deleting discount. Please try again.');
+                }
             }
         }
 
@@ -104,7 +116,8 @@
 
         function logout() {
             alert("Logging out...");
-            // Clear session if needed
+            localStorage.removeItem('userRole'); 
+            window.location.href = '/login.html'; 
         }
 
         window.onload = () => {

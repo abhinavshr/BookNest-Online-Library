@@ -99,7 +99,6 @@ namespace BookNest.Controllers
             }
             catch (Exception ex)
             {
-                // Log the full exception message, stack trace, and inner exception (if available)
                 Console.WriteLine("Error: " + ex.Message);
                 Console.WriteLine("Stack Trace: " + ex.StackTrace);
                 if (ex.InnerException != null)
