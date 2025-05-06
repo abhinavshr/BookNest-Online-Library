@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Staff</title>
-    <link rel="stylesheet" href="../../css/add_staff.css">
+    <title>Add Author</title>
+    <link rel="stylesheet" href="../../css/add_author.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -26,22 +26,18 @@
 
     <div id="content">
         <div class="form-container">
-            <h2>Add New Staff</h2>
-            <form id="addStaffForm" action="javascript:void(0);">
+            <h2>Add New Author</h2>
+            <form id="addAuthorForm" action="javascript:void(0);">
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="authorName">Name</label>
+                    <input type="text" id="authorName" name="authorName" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="authorBiography">Biography</label>
+                    <textarea id="authorBiography" name="authorBiography" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit">Add Staff</button>
+                    <button type="submit">Add Author</button>
                 </div>
             </form>
             <div id="responseMessage"></div>
@@ -69,31 +65,31 @@
             return JSON.parse(jsonPayload);
         }
 
-        document.getElementById("addStaffForm").addEventListener("submit", function (e) {
+        document.getElementById("addAuthorForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+            const authorName = document.getElementById("authorName").value;
+            const authorBiography = document.getElementById("authorBiography").value;
 
-            const staffData = { name, email, password };
+            const authorData = { name: authorName, biography: authorBiography };
+            console.log(authorData);
 
-            fetch('/api/users/addstaff', {
+            fetch('http://localhost:5223/api/author/addauthor', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(staffData)
+                body: JSON.stringify(authorData)
             })
                 .then(response => {
                     if (response.ok) return response.json();
-                    throw new Error('Failed to add staff');
+                    throw new Error('Failed to add author');
                 })
                 .then(data => {
                     document.getElementById("responseMessage").innerHTML =
-                        `<p class="success">Staff added successfully! Redirecting...</p>`;
+                        `<p class="success">Author added successfully! Redirecting...</p>`;
                     setTimeout(() => {
-                        window.location.href = 'staff_page.html';
+                        window.location.href = 'authorpage.html';
                     }, 1000);
                 })
                 .catch(error => {

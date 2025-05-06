@@ -8,6 +8,7 @@ namespace BookNest.Services.Interface
         Task AddUser(InsertUserDto userDto);
         Task AddStaff(InsertUserDto userDto);
         Task<List<GetAllUserDto>> GetAllUsers();
+        Task<List<GetAllUserDto>> GetAllStaff();
         Task<User> ValidateUserAsync(LoginDto dto);
         Task<GetAllUserDto> GetById(Guid id); 
         Task UpdateUser(Guid id, UpdateUserDto userDto); 
