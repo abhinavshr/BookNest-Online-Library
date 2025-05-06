@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BookNest.Entities;
 
 namespace BookNest.Dtos
 {
