@@ -14,7 +14,6 @@ namespace BookNest.Entities
 
         public DateTime EndDate { get; set; }
 
-        public string CreatedBy { get; set; }
     }
 
 }

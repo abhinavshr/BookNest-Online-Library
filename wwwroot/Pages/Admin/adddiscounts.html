@@ -60,17 +60,20 @@
         document.getElementById('addDiscountForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            const startDate = new Date(document.getElementById('startDate').value).toISOString();
+            const endDate = new Date(document.getElementById('endDate').value).toISOString();
+
             const discountData = {
                 bookId: document.getElementById('bookId').value,
                 discountType: document.getElementById('discountType').value,
                 value: parseFloat(document.getElementById('value').value),
                 isOnSale: document.getElementById('isOnSale').value === 'true',
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value
+                startDate: startDate, 
+                endDate: endDate       
             };
 
             try {
-                const response = await fetch('http://localhost:5223/api/discounts', {
+                const response = await fetch('http://localhost:5223/api/discounts/add', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -86,13 +89,11 @@
                 window.location.href = 'discounts.html';
             } catch (error) {
                 console.error('Error adding discount:', error);
-                alert('Error adding discount. Please try again.');
             }
         });
 
         function logout() {
             alert("Logging out...");
-            // Add actual logout logic
         }
     </script>
 </body>
