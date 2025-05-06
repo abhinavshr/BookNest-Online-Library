@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Generes</title>
     <link rel="stylesheet" href="../../css/add_generes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -27,7 +26,7 @@
     <div id="content">
         <div class="form-container">
             <h2>Add New Generes</h2>
-            <form id="addAuthorForm" action="javascript:void(0);">
+            <form id="addGeneresForm" action="javascript:void(0);">
                 <div class="form-group">
                     <label for="generesName">Name</label>
                     <input type="text" id="generesName" name="generesName" required>
@@ -65,31 +64,31 @@
             return JSON.parse(jsonPayload);
         }
 
-        document.getElementById("addAuthorForm").addEventListener("submit", function (e) {
+        document.getElementById("addGeneresForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            const authorName = document.getElementById("authorName").value;
-            const authorBiography = document.getElementById("authorBiography").value;
+            const generesName = document.getElementById("generesName").value;
+            const generesDescription = document.getElementById("authorBiography").value;
 
-            const authorData = { name: authorName, biography: authorBiography };
-            console.log(authorData);
+            const genreData = { name: generesName, description: generesDescription };
 
-            fetch('http://localhost:5223/api/author/addauthor', {
+            fetch('http://localhost:5223/api/genres/add', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
                 },
-                body: JSON.stringify(authorData)
+                body: JSON.stringify(genreData)
             })
                 .then(response => {
                     if (response.ok) return response.json();
-                    throw new Error('Failed to add author');
+                    throw new Error('Failed to add genre');
                 })
                 .then(data => {
                     document.getElementById("responseMessage").innerHTML =
-                        `<p class="success">Author added successfully! Redirecting...</p>`;
+                        `<p class="success">Genre added successfully! Redirecting...</p>`;
                     setTimeout(() => {
-                        window.location.href = 'authorpage.html';
+                        window.location.href = 'generes_management.html';
                     }, 1000);
                 })
                 .catch(error => {
@@ -97,6 +96,10 @@
                         `<p class="error">Error: ${error.message}</p>`;
                 });
         });
+
+        function logout() {
+            alert("Logging out...");
+        }
     </script>
 </body>
 </html>

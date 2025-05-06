@@ -4,10 +4,10 @@ namespace BookNest.Services.Interface
 {
     public interface IGenreService
     {
-        void AddGenre(InsertGenreDto genreDto);
-        List<GetAllGenreDto> GetAllGenres();
-        GetAllGenreDto GetById(Guid id);
-        void UpdateGenre(Guid id, UpdateGenreDto genreDto);
-        void DeleteGenre(Guid id);
+        Task AddGenre(InsertGenreDto genreDto);
+        Task<List<GetAllGenreDto>> GetAllGenres();
+        Task<GetAllGenreDto> GetById(Guid id);
+        Task UpdateGenre(Guid id, UpdateGenreDto genreDto);
+        Task DeleteGenre(Guid id);
     }
 }

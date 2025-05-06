@@ -4,10 +4,10 @@ namespace BookNest.Services.Interface
 {
     public interface IPublisherService
     {
-        void AddPublisher(InsertPublisherDto publisherDto);
-        List<GetAllPublisherDto> GetAllPublishers();
-        GetAllPublisherDto GetPublisherById(Guid id);
-        void UpdatePublisher(Guid id, UpdatePublisherDto publisherDto);
-        void DeletePublisher(Guid id);
+        Task AddPublisher(InsertPublisherDto publisherDto);
+        Task<List<GetAllPublisherDto>> GetAllPublishers();
+        Task<GetAllPublisherDto> GetPublisherById(Guid id);
+        Task UpdatePublisher(Guid id, UpdatePublisherDto publisherDto);
+        Task DeletePublisher(Guid id);
     }
 }
