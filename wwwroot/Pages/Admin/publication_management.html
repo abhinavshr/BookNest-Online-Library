@@ -29,8 +29,8 @@
                 <div class="search-bar">
                     <input class="search-customize" type="search" placeholder="Search..." />
                 </div>
-                <div class="add-bar" id="add-author-container">
-                    <a href="addpublication.html" class="add-author-button">
+                <div class="add-bar" id="add-publication-container">
+                    <a href="addpublication.html" class="add-publication-button">
                         <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">person_add</span>
                         Add New Publication
                     </a>
@@ -55,7 +55,6 @@
     </div>
 
     <script>
-
         const token = localStorage.getItem("jwtToken");
 
         if (!token) {
@@ -76,46 +75,46 @@
             return JSON.parse(jsonPayload);
         }
 
-        async function fetchAuthorData() {
+        async function fetchPublisherData() {
             try {
-                const response = await fetch('http://localhost:5223/api/author/getallauthors');
-                if (!response.ok) throw new Error('Failed to fetch authors');
-                const authorList = await response.json();
+                const response = await fetch('http://localhost:5223/api/publisher');
+                if (!response.ok) throw new Error('Failed to fetch publishers');
+                const publisherList = await response.json();
 
                 const tbody = document.querySelector('.custom-table tbody');
                 tbody.innerHTML = '';
 
-                authorList.forEach((author, index) => {
+                publisherList.forEach((publisher, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${author.authorId}</td>
-                    <td>${author.name}</td>
-                    <td>${author.biography}</td>
-                    <td><button onclick="deleteAuthor('${author.authorId}')">Delete</button></td>
-                `;
+                            <td>${index + 1}</td>
+                            <td>${publisher.publisherId}</td>
+                            <td>${publisher.name}</td>
+                            <td>${publisher.description}</td>
+                            <td><button onclick="deletePublisher('${publisher.publisherId}')">Delete</button></td>
+                        `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
-                console.error('Error fetching authors:', error);
+                console.error('Error fetching publishers:', error);
             }
         }
 
-        function deleteAuthor(authorId) {
-            if (confirm(`Are you sure you want to delete author with ID ${authorId}?`)) {
-                console.log(`Deleting author: ${authorId}`);
+        function deletePublisher(publisherId) {
+            if (confirm(`Are you sure you want to delete publisher with ID ${publisherId}?`)) {
+                console.log(`Deleting publisher: ${publisherId}`);
             }
         }
 
-  /*      function checkUserRole() {
+        function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');
             if (loggedInUserRole !== 'Staff') {
-                document.getElementById('add-author-container').style.display = 'none';
+                document.getElementById('add-publication-container').style.display = 'none';
             }
-        }*/
+        }
 
         window.onload = () => {
-            fetchAuthorData();
+            fetchPublisherData();
             checkUserRole();
         };
 
