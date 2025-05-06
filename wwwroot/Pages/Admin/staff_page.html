@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Staff Management</title>
+    <link rel="stylesheet" href="../../css/staff_management.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div id="sidebar">
+        <ul>
+            <li><a href="admindashboard.html">Dashboard</a></li>
+            <li><a href="staff_page.html">Staff Management</a></li>
+            <li><a href="authorpage.html">Author Management</a></li>
+            <li><a href="genres-management.html">Genres Management</a></li>
+            <li><a href="publication-management.html">Publication Management</a></li>
+            <li><a href="book-management.html">Book Management</a></li>
+            <li><a href="order-management.html">Order Management</a></li>
+            <li><a href="announcement.html">Announcement</a></li>
+            <li><a href="discounts.html">Discounts</a></li>
+            <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div class="full-container">
+            <div class="second-bar">
+                <div class="search-bar">
+                    <input class="search-customize" type="search" placeholder="Search..." />
+                </div>
+                <div class="add-bar" id="add-staff-container">
+                    <a href="addstaff.html" data-page="addstaff" class="add-staff-button">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">person_add</span>
+                        Add New Staff
+                    </a>
+                </div>
+            </div>
+            <div class="third-bar">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Email</th>
+                            <th>Registration Date</th>
+                            <th>Is Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("jwtToken");
+
+        if (!token) {
+            window.location.href = '../login.html';
+        } else {
+            const decodedToken = parseJwt(token);
+            if (decodedToken.role !== 'Admin' && decodedToken.role !== 'Staff') {
+                window.location.href = '../login.html';
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        async function fetchStaffData() {
+            try {
+                const response = await fetch('/api/users/staff');
+                if (!response.ok) throw new Error('Failed to fetch staff data');
+                const staffList = await response.json();
+
+                const tbody = document.querySelector('.custom-table tbody');
+                tbody.innerHTML = '';
+
+                staffList.forEach((staff, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${staff.name}</td>
+                                <td>${staff.role}</td>
+                                <td>${staff.email}</td>
+                                <td>${new Date(staff.registrationDate).toLocaleDateString()}</td>
+                                <td>${staff.isActive ? 'Active' : 'Inactive'}</td>
+                                <td><button onclick="deleteStaff('${staff.email}')">Delete</button></td>
+                            `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching staff:', error);
+            }
+        }
+
+        function checkUserRole() {
+            const loggedInUserRole = localStorage.getItem('userRole');
+
+            console.log('Logged in user role:', loggedInUserRole); 
+
+            if (loggedInUserRole !== 'Admin') {
+                document.getElementById('add-staff-container').style.display = 'none';
+            }
+        }
+
+        function deleteStaff(email) {
+            if (confirm(`Are you sure you want to delete ${email}?`)) {
+                console.log(`Deleting user: ${email}`);
+            }
+        }
+
+        window.onload = () => {
+            fetchStaffData();
+            checkUserRole();
+        };
+
+        function logout() {
+            alert("Logging out...");
+        }
+    </script>
+</body>
+</html>

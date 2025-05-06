@@ -44,8 +44,10 @@
                     console.log(data);
                     if (data.message === "Login successful.") {
                         const token = data.token;
-                        localStorage.setItem("jwtToken", token);
                         const role = data.role;
+                        localStorage.setItem("jwtToken", token);
+                        localStorage.setItem("userRole", role);
+                        console.log(localStorage.getItem("userRole"));
                         if (role === 'User') {
                             window.location.href = '../index.html';
                         } else if (role === 'Admin' || role === 'Staff') {

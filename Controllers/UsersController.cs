@@ -30,6 +30,21 @@ namespace BookNest.Controllers
             return Ok(users);
         }
 
+        [HttpGet("staff")]
+        public async Task<IActionResult> GetAllStaff()
+        {
+            try
+            {
+                var staffUsers = await _userService.GetAllStaff();
+                return Ok(staffUsers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
         [HttpGet("{id}")]
         public IActionResult GetUserById(Guid id)
         {
@@ -50,6 +65,21 @@ namespace BookNest.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpPost("addstaff")]
+        public async Task<IActionResult> AddStaff([FromBody] InsertUserDto dto)
+        {
+            try
+            {
+                await _userService.AddStaff(dto);
+                return Ok(new { message = "Staff added successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
