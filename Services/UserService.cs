@@ -165,6 +165,37 @@ namespace First.Services
             }
         }
 
+        public async Task<List<GetAllUserDto>> GetAllStaff()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .Where(u => u.IsActive && u.Role == "Staff")
+                    .ToListAsync();
+
+                if (users == null || !users.Any())
+                    throw new Exception("No active staff users found");
+
+                var result = users.Select(u => new GetAllUserDto
+                {
+                    Name = u.Name,
+                    Email = u.Email,
+                    Role = u.Role,
+                    MembershipID = u.MembershipID,
+                    RegistrationDate = u.RegistrationDate,
+                    OrderCount = u.OrderCount,
+                    IsActive = u.IsActive
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving staff users: " + ex.Message);
+            }
+        }
+
+
         // Async method to get a user by Id
         public async Task<GetAllUserDto> GetById(Guid id)
         {

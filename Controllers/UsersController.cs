@@ -30,6 +30,21 @@ namespace BookNest.Controllers
             return Ok(users);
         }
 
+        [HttpGet("staff")]
+        public async Task<IActionResult> GetAllStaff()
+        {
+            try
+            {
+                var staffUsers = await _userService.GetAllStaff();
+                return Ok(staffUsers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
         [HttpGet("{id}")]
         public IActionResult GetUserById(Guid id)
         {
