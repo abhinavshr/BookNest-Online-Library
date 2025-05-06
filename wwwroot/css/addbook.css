@@ -67,7 +67,7 @@
     }
 
     .form-group input,
-    .form-group textarea {
+    .form-group select {
         width: 100%;
         padding: 10px;
         border: 1px solid #bbb;
@@ -78,7 +78,7 @@
     }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group select:focus {
             border-color: #7a956f;
         }
 
@@ -96,6 +96,32 @@ button[type="submit"] {
     button[type="submit"]:hover {
         background-color: #5e7a57;
     }
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: border-color 0.3s;
+}
+
+    textarea:focus {
+        border-color: #007bff;
+        outline: none;
+        background-color: #fff;
+    }
+
+    textarea::placeholder {
+        color: #aaa;
+        font-style: italic;
+    }
+
 
 #responseMessage {
     margin-top: 15px;

@@ -4,10 +4,10 @@ namespace BookNest.Services.Interface
 {
     public interface IBookService
     {
-        void AddBook(InsertBookDto bookDto);
-        List<GetAllBookDto> GetAllBooks();
-        GetAllBookDto GetById(Guid id);
-        void UpdateBook(Guid id, UpdateBookDto bookDto);
-        void DeleteBook(Guid id);
+        Task AddBook(InsertBookDto bookDto);
+        Task<List<GetAllBookDto>> GetAllBooks();
+        Task<GetAllBookDto> GetById(Guid id);
+        Task UpdateBook(Guid id, UpdateBookDto bookDto);
+        Task DeleteBook(Guid id);
     }
 }

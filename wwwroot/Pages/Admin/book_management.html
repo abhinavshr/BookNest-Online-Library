@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Staff Management</title>
-    <link rel="stylesheet" href="../../css/staff_management.css">
+    <title>Book Management</title>
+    <link rel="stylesheet" href="../../css/book_management.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -29,10 +29,10 @@
                 <div class="search-bar">
                     <input class="search-customize" type="search" placeholder="Search..." />
                 </div>
-                <div class="add-bar" id="add-staff-container">
-                    <a href="addstaff.html" data-page="addstaff" class="add-staff-button">
-                        <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">person_add</span>
-                        Add New Staff
+                <div class="add-bar" id="add-book-container">
+                    <a href="addbook.html" class="add-book-button">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">library_add</span>
+                        Add New Book
                     </a>
                 </div>
             </div>
@@ -41,11 +41,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Role</th>
-                            <th>Email</th>
-                            <th>Registration Date</th>
-                            <th>Is Active</th>
+                            <th>Book ID</th>
+                            <th>Title</th>
+                            <th>Price</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -77,57 +75,55 @@
             return JSON.parse(jsonPayload);
         }
 
-        async function fetchStaffData() {
+        async function fetchBookData() {
             try {
-                const response = await fetch('/api/users/staff');
-                if (!response.ok) throw new Error('Failed to fetch staff data');
-                const staffList = await response.json();
+                const response = await fetch('http://localhost:5223/api/book');
+                if (!response.ok) throw new Error(`Error ${response.status}`);
 
+                const bookList = await response.json();
                 const tbody = document.querySelector('.custom-table tbody');
                 tbody.innerHTML = '';
 
-                staffList.forEach((staff, index) => {
+                bookList.forEach((book, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>${staff.name}</td>
-                                <td>${staff.role}</td>
-                                <td>${staff.email}</td>
-                                <td>${new Date(staff.registrationDate).toLocaleDateString()}</td>
-                                <td>${staff.isActive ? 'Active' : 'Inactive'}</td>
-                                <td><button onclick="deleteStaff('${staff.email}')">Delete</button></td>
-                            `;
+                    <td>${index + 1}</td>
+                    <td>${book.bookId}</td>
+                    <td>${book.title}</td>
+                    <td>${book.price.toFixed(2)}</td>
+                    <td><button onclick="deleteBook('${book.bookId}')">Delete</button></td>
+                `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
-                console.error('Error fetching staff:', error);
+                console.error('Error fetching books:', error);
+            }
+        }
+
+        function deleteBook(bookId) {
+            if (confirm(`Are you sure you want to delete book with ID ${bookId}?`)) {
+                console.log(`Deleting book: ${bookId}`);
+                // You can implement actual delete logic here.
             }
         }
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');
-
-            console.log('Logged in user role:', loggedInUserRole); 
-
-            if (loggedInUserRole !== 'Admin') {
-                document.getElementById('add-staff-container').style.display = 'none';
+            if (loggedInUserRole !== 'Staff') {
+                document.getElementById('add-book-container').style.display = 'none';
             }
         }
-
-        function deleteStaff(email) {
-            if (confirm(`Are you sure you want to delete ${email}?`)) {
-                console.log(`Deleting user: ${email}`);
-            }
-        }
-
-        window.onload = () => {
-            fetchStaffData();
-            checkUserRole();
-        };
 
         function logout() {
             alert("Logging out...");
+            localStorage.removeItem("jwtToken");
+            window.location.href = '../login.html';
         }
+
+        window.onload = () => {
+            fetchBookData();
+            checkUserRole();
+        };
     </script>
 </body>
 </html>

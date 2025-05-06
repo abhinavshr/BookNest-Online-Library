@@ -19,8 +19,6 @@ namespace BookNest.Entities
 
         [Required] public string Language { get; set; }
 
-        [ForeignKey(nameof(BookFormat))] public Guid FormatId { get; set; }
-
         public string Description { get; set; }
 
         public decimal Price { get; set; }
