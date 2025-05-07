@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Author Management</title>
-    <link rel="stylesheet" href="../../css/author_management.css">
+    <title>Announcement Management</title>
+    <link rel="stylesheet" href="../../css/announcement.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -29,10 +29,10 @@
                 <div class="search-bar">
                     <input class="search-customize" type="search" placeholder="Search..." />
                 </div>
-                <div class="add-bar" id="add-author-container">
-                    <a href="addauthor.html" class="add-author-button">
-                        <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">person_add</span>
-                        Add New Author
+                <div class="add-bar" id="add-announcement-container">
+                    <a href="addannouncement.html" class="add-announcement-button">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">add</span>
+                        Add New Announcement
                     </a>
                 </div>
             </div>
@@ -41,9 +41,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Author ID</th>
-                            <th>Name</th>
-                            <th>Biography</th>
+                            <th>Announcement ID</th>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -55,7 +57,6 @@
     </div>
 
     <script>
-
         const token = localStorage.getItem("jwtToken");
 
         if (!token) {
@@ -76,35 +77,41 @@
             return JSON.parse(jsonPayload);
         }
 
-        async function fetchAuthorData() {
+        async function fetchAnnouncementData() {
             try {
-                const response = await fetch('http://localhost:5223/api/author/getallauthors');
-                if (!response.ok) throw new Error('Failed to fetch authors');
-                const authorList = await response.json();
+                const response = await fetch('http://localhost:5223/api/announcement');
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
 
+                const announcementList = await response.json();
                 const tbody = document.querySelector('.custom-table tbody');
                 tbody.innerHTML = '';
 
-                authorList.forEach((author, index) => {
+                announcementList.forEach((announcement, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${author.authorId}</td>
-                    <td>${author.name}</td>
-                    <td>${author.biography}</td>
-                    <td><button onclick="deleteAuthor('${author.authorId}')">Delete</button></td>
-                `;
+                <td>${index + 1}</td>
+                <td>${announcement.announcementId}</td>
+                <td>${announcement.title}</td>
+                <td>${announcement.message}</td>
+                <td>${announcement.startDate}</td>
+                <td>${announcement.endDate}</td>
+                <td><button onclick="deleteAnnouncement('${announcement.announcementId}')">Delete</button></td>
+            `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
-                console.error('Error fetching authors:', error);
+                console.error('Error fetching announcements:', error);
             }
         }
 
-        async function deleteAuthor(authorId) {
-            if (confirm(`Are you sure you want to delete author with ID ${authorId}?`)) {
+
+
+        async function deleteAnnouncement(announcementId) {
+            if (confirm(`Are you sure you want to delete announcement with ID ${announcementId}?`)) {
                 try {
-                    const response = await fetch(`http://localhost:5223/api/author/${authorId}`, {
+                    const response = await fetch(`http://localhost:5223/api/announcement/${announcementId}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -112,17 +119,17 @@
                     });
 
                     if (response.ok) {
-                        alert('Author deleted successfully.');
-                        fetchAuthorData();
+                        alert('Announcement deleted successfully.');
+                        fetchAnnouncementData(); // Refresh the table
                     } else if (response.status === 404) {
-                        alert('Author not found.');
+                        alert('Announcement not found.');
                     } else {
                         const error = await response.json();
-                        alert(`Error deleting author: ${error.error || 'Unknown error'}`);
+                        alert(`Error deleting announcement: ${error.error || 'Unknown error'}`);
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Failed to delete author.');
+                    alert('Failed to delete announcement.');
                 }
             }
         }
@@ -131,17 +138,19 @@
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');
             if (loggedInUserRole !== 'Staff') {
-                document.getElementById('add-author-container').style.display = 'none';
+                document.getElementById('add-announcement-container').style.display = 'none';
             }
         }
 
         window.onload = () => {
-            fetchAuthorData();
+            fetchAnnouncementData();
             checkUserRole();
         };
 
         function logout() {
             alert("Logging out...");
+            localStorage.removeItem("jwtToken");
+            window.location.href = '../login.html';
         }
     </script>
 </body>

@@ -115,7 +115,6 @@ namespace First.Services
 
 
 
-        // Async method to delete a user
         public async Task DeleteUser(Guid id)
         {
             try
@@ -124,7 +123,6 @@ namespace First.Services
                 if (user == null)
                     throw new Exception("User Not Found");
 
-                // Remove user from the database
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
             }
@@ -134,7 +132,6 @@ namespace First.Services
             }
         }
 
-        // Async method to get all users
         public async Task<List<GetAllUserDto>> GetAllUsers()
         {
             try

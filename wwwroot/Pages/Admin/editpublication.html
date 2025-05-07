@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Author</title>
-    <link rel="stylesheet" href="../../css/add_author.css">
+    <title>Add New Publication</title>
+    <link rel="stylesheet" href="../../css/add_publication.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
         <ul>
             <li><a href="admindashboard.html">Dashboard</a></li>
             <li><a href="staff_page.html">Staff Management</a></li>
-            <li><a href="authorpage.html">Author Management</a></li>
+            <li><a href="author-management.html">Author Management</a></li>
             <li><a href="generes_management.html">Genres Management</a></li>
             <li><a href="publication_management.html">Publication Management</a></li>
             <li><a href="book_management.html">Book Management</a></li>
@@ -26,19 +26,17 @@
 
     <div id="content">
         <div class="form-container">
-            <h2>Add New Author</h2>
-            <form id="addAuthorForm" action="javascript:void(0);">
+            <h2>Edit Existing Publication</h2>
+            <form id="addPublicationForm" action="javascript:void(0);">
                 <div class="form-group">
-                    <label for="authorName">Name</label>
-                    <input type="text" id="authorName" name="authorName" required>
+                    <label for="publicationName">Name</label>
+                    <input type="text" id="publicationName" name="publicationName" required>
                 </div>
                 <div class="form-group">
-                    <label for="authorBiography">Biography</label>
-                    <textarea id="authorBiography" name="authorBiography" rows="4" required></textarea>
+                    <label for="publicationDescription">Description</label>
+                    <textarea id="publicationDescription" name="publicationDescription" rows="4" required></textarea>
                 </div>
-                <div class="form-group">
-                    <button type="submit">Add Author</button>
-                </div>
+         
             </form>
             <div id="responseMessage"></div>
         </div>
@@ -65,31 +63,31 @@
             return JSON.parse(jsonPayload);
         }
 
-        document.getElementById("addAuthorForm").addEventListener("submit", function (e) {
+        document.getElementById("addPublicationForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            const authorName = document.getElementById("authorName").value;
-            const authorBiography = document.getElementById("authorBiography").value;
+            const publicationName = document.getElementById("publicationName").value;
+            const publicationDescription = document.getElementById("publicationDescription").value;
 
-            const authorData = { name: authorName, biography: authorBiography };
-            console.log(authorData);
+            const publicationData = { name: publicationName, description: publicationDescription };
+            console.log(publicationData);
 
-            fetch('http://localhost:5223/api/author/addauthor', {
+            fetch('http://localhost:5223/api/publisher/add', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(authorData)
+                body: JSON.stringify(publicationData)
             })
                 .then(response => {
                     if (response.ok) return response.json();
-                    throw new Error('Failed to add author');
+                    throw new Error('Failed to add publication');
                 })
                 .then(data => {
                     document.getElementById("responseMessage").innerHTML =
-                        `<p class="success">Author added successfully! Redirecting...</p>`;
+                        `<p class="success">Publication added successfully! Redirecting...</p>`;
                     setTimeout(() => {
-                        window.location.href = 'authorpage.html';
+                        window.location.href = 'publication_management.html';
                     }, 1000);
                 })
                 .catch(error => {

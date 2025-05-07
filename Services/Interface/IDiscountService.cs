@@ -4,8 +4,8 @@ namespace BookNest.Services.Interface
 {
     public interface IDiscountService
     {
-        void AddDiscount(InsertDiscountDto discountDto);
-        List<GetAllDiscountDto> GetAllDiscounts();
-        void DeleteDiscount(Guid id);
+        Task AddDiscount(InsertDiscountDto discountDto);
+        Task<List<GetAllDiscountDto>> GetAllDiscounts();
+        Task DeleteDiscount(Guid id);
     }
 }

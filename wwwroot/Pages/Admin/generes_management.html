@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Author Management</title>
-    <link rel="stylesheet" href="../../css/author_management.css">
+    <title>Generes Management</title>
+    <link rel="stylesheet" href="../../css/generes_management.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -30,9 +30,9 @@
                     <input class="search-customize" type="search" placeholder="Search..." />
                 </div>
                 <div class="add-bar" id="add-author-container">
-                    <a href="addauthor.html" class="add-author-button">
+                    <a href="addgeneres.html" class="add-author-button">
                         <span class="material-icons" style="vertical-align: middle; font-size: 19px; margin-right: 5px;">person_add</span>
-                        Add New Author
+                        Add New Generes
                     </a>
                 </div>
             </div>
@@ -41,9 +41,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Author ID</th>
+                            <th>Genre ID</th>
                             <th>Name</th>
-                            <th>Biography</th>
+                            <th>Description</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -55,7 +55,6 @@
     </div>
 
     <script>
-
         const token = localStorage.getItem("jwtToken");
 
         if (!token) {
@@ -76,56 +75,51 @@
             return JSON.parse(jsonPayload);
         }
 
-        async function fetchAuthorData() {
+        async function fetchGenreData() {
             try {
-                const response = await fetch('http://localhost:5223/api/author/getallauthors');
-                if (!response.ok) throw new Error('Failed to fetch authors');
-                const authorList = await response.json();
+                const response = await fetch('http://localhost:5223/api/genres');
+                if (!response.ok) throw new Error('Failed to fetch genres');
+                const genreList = await response.json();
 
                 const tbody = document.querySelector('.custom-table tbody');
                 tbody.innerHTML = '';
 
-                authorList.forEach((author, index) => {
+                genreList.forEach((genre, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${author.authorId}</td>
-                    <td>${author.name}</td>
-                    <td>${author.biography}</td>
-                    <td><button onclick="deleteAuthor('${author.authorId}')">Delete</button></td>
-                `;
+                        <td>${index + 1}</td>
+                        <td>${genre.genreId}</td>
+                        <td>${genre.name}</td>
+                        <td>${genre.description}</td>
+                        <td><button onclick="deleteGenre('${genre.genreId}')">Delete</button></td>
+                    `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
-                console.error('Error fetching authors:', error);
+                console.error('Error fetching genres:', error);
             }
         }
 
-        async function deleteAuthor(authorId) {
-            if (confirm(`Are you sure you want to delete author with ID ${authorId}?`)) {
-                try {
-                    const response = await fetch(`http://localhost:5223/api/author/${authorId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
+        async function deleteGenre(genreId) {
+            const isConfirmed = confirm(`Are you sure you want to delete the genre with ID ${genreId}?`);
 
-                    if (response.ok) {
-                        alert('Author deleted successfully.');
-                        fetchAuthorData();
-                    } else if (response.status === 404) {
-                        alert('Author not found.');
-                    } else {
-                        const error = await response.json();
-                        alert(`Error deleting author: ${error.error || 'Unknown error'}`);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Failed to delete author.');
-                }
+            if (!isConfirmed) {
+                return;
+            }
+
+            const response = await fetch(`http://localhost:5223/api/genres/${genreId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                console.log(`Deleted genre with ID: ${genreId}`);
+                fetchGenreData();
+            } else {
+                const error = await response.json();
+                console.error("Error deleting genre:", error);
             }
         }
+
 
 
         function checkUserRole() {
@@ -136,13 +130,15 @@
         }
 
         window.onload = () => {
-            fetchAuthorData();
+            fetchGenreData();
             checkUserRole();
         };
 
         function logout() {
-            alert("Logging out...");
+            localStorage.removeItem("jwtToken");
+            window.location.href = '../login.html';
         }
     </script>
+
 </body>
 </html>

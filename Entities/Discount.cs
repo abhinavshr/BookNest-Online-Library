@@ -5,7 +5,8 @@ namespace BookNest.Entities
 {
     public class Discount
     {
-        [Key] public Guid DiscountId { get; set; } = Guid.NewGuid();
+        [Key]
+        public Guid DiscountId { get; set; }
 
         [ForeignKey(nameof(Book))] public Guid? BookId { get; set; } // Nullable
 
@@ -18,6 +19,12 @@ namespace BookNest.Entities
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
+
+        public Discount()
+        {
+            DiscountId = Guid.NewGuid();
+        }
     }
 
-}
+    
+    }

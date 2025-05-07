@@ -4,9 +4,9 @@ namespace BookNest.Services.Interface
 {
     public interface IAnnouncementService
     {
-        void AddAnnouncement(InsertAnnouncementDto announcementDto);
-        List<GetAllAnnouncementDto> GetActiveAnnouncements();
-        void DeleteAnnouncement(Guid id);
+        Task AddAnnouncement(InsertAnnouncementDto announcementDto);
+        Task<List<GetAllAnnouncementDto>> GetActiveAnnouncements();
+        Task DeleteAnnouncement(Guid id);
 
     }
 }

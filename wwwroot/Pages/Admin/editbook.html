@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Add Book</title>
+    <link rel="stylesheet" href="../../css/addbook.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div id="sidebar">
+        <ul>
+            <li><a href="admindashboard.html">Dashboard</a></li>
+            <li><a href="staff_page.html">Staff Management</a></li>
+            <li><a href="authorpage.html">Author Management</a></li>
+            <li><a href="generes_management.html">Genres Management</a></li>
+            <li><a href="publication_management.html">Publication Management</a></li>
+            <li><a href="book_management.html">Book Management</a></li>
+            <li><a href="order-management.html">Order Management</a></li>
+            <li><a href="announcement.html">Announcement</a></li>
+            <li><a href="discounts.html">Discounts</a></li>
+            <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div class="form-container">
+            <h2>Edit Existing Book</h2>
+            <form id="addBookForm" action="javascript:void(0);">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+                <div class="form-group">
+                    <label for="isbn">ISBN</label>
+                    <input type="text" id="isbn" name="isbn" required />
+                </div>
+                <div class="form-group">
+                    <label for="authorId">Author</label>
+                    <select id="authorId" name="authorId" required>
+                        <option value="" disabled selected>Choose an Author</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="genreId">Genre</label>
+                    <select id="genreId" name="genreId" required>
+                        <option value="" disabled selected>Choose a Genre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="publisherId">Publication</label>
+                    <select id="publisherId" name="publisherId" required>
+                        <option value="" disabled selected>Choose a Publication</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price" step="0.01" required />
+                </div>
+                <div class="form-group">
+                    <label for="stock">Stock</label>
+                    <input type="number" id="stock" name="stock" required />
+                </div>
+                <div class="form-group">
+                    <label for="physicalAvailability">Physical Availability</label>
+                    <select id="physicalAvailability" name="physicalAvailability" required>
+                        <option value="" disabled selected>Choose Availability</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="publishedDate">Published Date</label>
+                    <input type="date" id="publishedDate" name="publishedDate" required />
+                </div>
+                <div class="form-group">
+                    <label for="language">Language</label>
+                    <input type="text" id="language" name="language" required />
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
+                </div>
+            
+            </form>
+            <div id="responseMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("jwtToken");
+
+        if (!token) {
+            window.location.href = '../login.html';
+        } else {
+            const decodedToken = parseJwt(token);
+            if (decodedToken.role !== 'Admin' && decodedToken.role !== 'Staff') {
+                window.location.href = '../login.html';
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        async function populateDropdown(url, elementId, idField, nameField) {
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!response.ok) throw new Error('Failed to fetch data from ' + url);
+
+                const list = await response.json();
+                const dropdown = document.getElementById(elementId);
+                dropdown.innerHTML = '<option value="" disabled selected>Choose an Author</option>';
+
+                list.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item[idField];
+                    option.textContent = item[nameField];
+                    dropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error(`Error loading ${elementId}:`, error);
+            }
+        }
+
+        async function fetchGenreData() {
+            try {
+                const response = await fetch('http://localhost:5223/api/genres');
+                if (!response.ok) throw new Error('Failed to fetch genres');
+                const genreList = await response.json();
+
+                const genreDropdown = document.getElementById("genreId");
+                genreDropdown.innerHTML = '<option value="" disabled selected>Choose a Genre</option>';
+                genreList.forEach((genre) => {
+                    const option = document.createElement('option');
+                    option.value = genre.genreId;
+                    option.textContent = genre.name;
+                    genreDropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching genres:', error);
+            }
+        }
+
+        async function fetchPublisherData() {
+            try {
+                const response = await fetch('http://localhost:5223/api/publisher');
+                if (!response.ok) throw new Error('Failed to fetch publishers');
+                const publisherList = await response.json();
+
+                const publisherDropdown = document.getElementById("publisherId");
+                publisherDropdown.innerHTML = '<option value="" disabled selected>Choose a Publication</option>';
+                publisherList.forEach((publisher) => {
+                    const option = document.createElement('option');
+                    option.value = publisher.publisherId;
+                    option.textContent = publisher.name;
+                    publisherDropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching publishers:', error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            populateDropdown('http://localhost:5223/api/author/getallauthors', 'authorId', 'authorId', 'name');
+            fetchGenreData();
+            fetchPublisherData();
+
+            document.getElementById("addBookForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const bookData = {
+                    title: document.getElementById("title").value,
+                    isbn: document.getElementById("isbn").value,
+                    authorId: document.getElementById("authorId").value,
+                    genreId: document.getElementById("genreId").value,
+                    publisherId: document.getElementById("publisherId").value,
+                    price: parseFloat(document.getElementById("price").value),
+                    stock: parseInt(document.getElementById("stock").value),
+                    physicalAvailability: document.getElementById("physicalAvailability").value === "true",
+                    publishedDate: document.getElementById("publishedDate").value,
+                    language: document.getElementById("language").value,
+                    description: document.getElementById("description").value
+                };
+
+                try {
+                    const response = await fetch('http://localhost:5223/api/book/addbook', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify(bookData)
+                    });
+
+                    if (response.ok) {
+                        document.getElementById("responseMessage").innerHTML =
+                            `<p class="success">Book added successfully! Redirecting...</p>`;
+                        setTimeout(() => {
+                            window.location.href = 'book_management.html';
+                        }, 1000);
+                    } else {
+                        throw new Error("Failed to add book");
+                    }
+                } catch (error) {
+                    document.getElementById("responseMessage").innerHTML =
+                        `<p class="error">Error: ${error.message}</p>`;
+                }
+            });
+        });
+
+        function logout() {
+            alert("Logging out...");
+            localStorage.removeItem("jwtToken");
+            window.location.href = "../login.html";
+        }
+    </script>
+</body>
+</html>
