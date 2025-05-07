@@ -44,24 +44,41 @@ namespace BookNest.Services
         }
 
 
-        public Task DeleteDiscount(Guid id)
+        public async Task DeleteDiscount(Guid id)
         {
-            throw new NotImplementedException();
+            var discount = await _context.Discounts.FindAsync(id);
+            if (discount != null)
+            {
+                _context.Discounts.Remove(discount);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Discount not found.");
+            }
         }
+
 
         public async Task<List<GetAllDiscountDto>> GetAllDiscounts()
         {
             var discounts = await _context.Discounts
-                .Select(d => new GetAllDiscountDto
-                {
-                    BookId = d.BookId,
-                    DiscountType = d.DiscountType,
-                    Value = d.Value,
-                    IsOnSale = d.IsOnSale,
-                    StartDate = d.StartDate,
-                    EndDate = d.EndDate
-                })
-                .ToListAsync();
+    .Select(d => new GetAllDiscountDto
+    {
+        DiscountId = d.DiscountId,
+        BookId = d.BookId,
+        DiscountType = d.DiscountType,
+        Value = d.Value,
+        IsOnSale = d.IsOnSale,
+        StartDate = d.StartDate,
+        EndDate = d.EndDate
+    })
+    .ToListAsync();
+
+            // Debugging
+            foreach (var discount in discounts)
+            {
+                Console.WriteLine($"DiscountId: {discount.DiscountId}");
+            }
 
             return discounts;
         }

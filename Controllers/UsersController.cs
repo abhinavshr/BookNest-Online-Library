@@ -174,10 +174,17 @@ namespace BookNest.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            _userService.DeleteUser(id);
-            return Ok("User deleted successfully.");
+            try
+            {
+                await _userService.DeleteUser(id);
+                return Ok(new { message = "User deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

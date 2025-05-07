@@ -70,16 +70,16 @@
                 data.forEach((discount, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${discount.discountId}</td>
-                            <td>${discount.bookId}</td>
-                            <td>${discount.discountType}</td>
-                            <td>${discount.value}</td>
-                            <td>${discount.isOnSale ? 'Yes' : 'No'}</td>
-                            <td>${new Date(discount.startDate).toLocaleDateString()}</td>
-                            <td>${new Date(discount.endDate).toLocaleDateString()}</td>
-                            <td><button onclick="deleteDiscount('${discount.discountId}')">Delete</button></td>
-                        `;
+                <td>${index + 1}</td>
+                <td>${discount.discountId}</td>
+                <td>${discount.bookId}</td>
+                <td>${discount.discountType}</td>
+                <td>${discount.value}</td>
+                <td>${discount.isOnSale ? 'Yes' : 'No'}</td>
+                <td>${new Date(discount.startDate).toLocaleDateString()}</td>
+                <td>${new Date(discount.endDate).toLocaleDateString()}</td>
+                <td><button onclick="deleteDiscount('${discount.discountId}')">Delete</button></td>
+            `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
@@ -87,22 +87,39 @@
             }
         }
 
+
         async function deleteDiscount(discountId) {
-            if (confirm(`Are you sure you want to delete discount ID ${discountId}?`)) {
+            console.log('Deleting discount with ID:', discountId);
+
+            const token = localStorage.getItem("jwtToken");
+
+            if (!token) {
+                alert('You are not logged in.');
+                window.location.href = '../login.html';
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete discount with ID ${discountId}?`)) {
                 try {
                     const response = await fetch(`http://localhost:5223/api/discounts/${discountId}`, {
                         method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
 
-                    if (!response.ok) {
-                        throw new Error('Failed to delete discount');
+                    if (response.ok) {
+                        alert('Discount deleted successfully.');
+                        fetchDiscounts(); 
+                    } else if (response.status === 404) {
+                        alert('Discount not found.');
+                    } else {
+                        const error = await response.json();
+                        alert(`Error deleting discount: ${error.error || 'Unknown error'}`);
                     }
-
-                    alert('Discount deleted successfully!');
-                    fetchDiscounts(); 
                 } catch (error) {
-                    console.error('Error deleting discount:', error);
-                    alert('Error deleting discount. Please try again.');
+                    console.error('Error:', error);
+                    alert('Failed to delete discount.');
                 }
             }
         }

@@ -32,6 +32,24 @@ namespace BookNest.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePublisher(Guid id)
+        {
+            try
+            {
+                await _publisherService.DeletePublisher(id);
+                return Ok(new { Message = "Publisher deleted successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
 
         [HttpPost("add")]
         public async Task<IActionResult> AddPublisher([FromBody] InsertPublisherDto publisherDto)

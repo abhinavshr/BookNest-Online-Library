@@ -41,10 +41,16 @@ namespace BookNest.Services
         }
 
 
-        public Task DeletePublisher(Guid id)
+        public async Task DeletePublisher(Guid id)
         {
-            throw new NotImplementedException();
+            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.PublisherId == id);
+            if (publisher == null)
+                throw new KeyNotFoundException("Publisher not found.");
+
+            _context.Publishers.Remove(publisher);
+            await _context.SaveChangesAsync();
         }
+
 
         public async Task<List<GetAllPublisherDto>> GetAllPublishers()
         {

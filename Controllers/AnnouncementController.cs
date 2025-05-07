@@ -50,5 +50,20 @@ namespace BookNest.Controllers
                 return StatusCode(500, new { message = "An error occurred while retrieving active announcements.", error = ex.Message });
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAnnouncement(Guid id)
+        {
+            try
+            {
+                await _announcementService.DeleteAnnouncement(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+        }
+
     }
 }

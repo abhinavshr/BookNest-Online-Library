@@ -124,10 +124,15 @@ namespace BookNest.Controllers
                 await _bookService.DeleteBook(id);
                 return Ok(new { Message = "Book deleted successfully." });
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new { Error = ex.Message });
             }
         }
+
     }
 }

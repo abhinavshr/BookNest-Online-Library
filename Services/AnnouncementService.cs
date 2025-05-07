@@ -38,12 +38,20 @@ namespace BookNest.Services
             }
         }
 
-
-
-        public Task DeleteAnnouncement(Guid id)
+        public async Task DeleteAnnouncement(Guid id)
         {
-            throw new NotImplementedException();
+            var announcement = await _context.Announcements.FindAsync(id);
+            if (announcement != null)
+            {
+                _context.Announcements.Remove(announcement);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Announcement not found.");
+            }
         }
+
 
         public async Task<List<GetAllAnnouncementDto>> GetActiveAnnouncements()
         {

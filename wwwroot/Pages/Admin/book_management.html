@@ -100,12 +100,30 @@
             }
         }
 
-        function deleteBook(bookId) {
+        async function deleteBook(bookId) {
             if (confirm(`Are you sure you want to delete book with ID ${bookId}?`)) {
-                console.log(`Deleting book: ${bookId}`);
-                // You can implement actual delete logic here.
+                try {
+                    const response = await fetch(`http://localhost:5223/api/book/${bookId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Book deleted successfully.');
+                        fetchBookData();
+                    } else {
+                        const errorData = await response.json();
+                        alert('Failed to delete book: ' + (errorData.error || response.statusText));
+                    }
+                } catch (error) {
+                    console.error('Error deleting book:', error);
+                    alert('An error occurred while deleting the book.');
+                }
             }
         }
+
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');

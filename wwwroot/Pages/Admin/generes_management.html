@@ -100,12 +100,27 @@
             }
         }
 
-        function deleteGenre(genreId) {
-            if (confirm(`Are you sure you want to delete genre with ID ${genreId}?`)) {
-                console.log(`Deleting genre: ${genreId}`);
-                // You can implement the DELETE API call here
+        async function deleteGenre(genreId) {
+            const isConfirmed = confirm(`Are you sure you want to delete the genre with ID ${genreId}?`);
+
+            if (!isConfirmed) {
+                return;
+            }
+
+            const response = await fetch(`http://localhost:5223/api/genres/${genreId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                console.log(`Deleted genre with ID: ${genreId}`);
+                fetchGenreData();
+            } else {
+                const error = await response.json();
+                console.error("Error deleting genre:", error);
             }
         }
+
+
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');
