@@ -28,10 +28,16 @@ namespace BookNest.Services
         }
 
 
-        public Task DeleteGenre(Guid id)
+        public async Task DeleteGenre(Guid id)
         {
-            throw new NotImplementedException();
+            var genre = await _context.Genres.FindAsync(id);
+            if (genre == null)
+                throw new KeyNotFoundException("Genre not found");
+
+            _context.Genres.Remove(genre);
+            await _context.SaveChangesAsync();
         }
+
 
         public async Task<List<GetAllGenreDto>> GetAllGenres()
         {

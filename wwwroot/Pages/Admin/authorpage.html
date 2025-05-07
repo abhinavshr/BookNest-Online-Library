@@ -101,11 +101,32 @@
             }
         }
 
-        function deleteAuthor(authorId) {
+        async function deleteAuthor(authorId) {
             if (confirm(`Are you sure you want to delete author with ID ${authorId}?`)) {
-                console.log(`Deleting author: ${authorId}`);
+                try {
+                    const response = await fetch(`http://localhost:5223/api/author/${authorId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Author deleted successfully.');
+                        fetchAuthorData();
+                    } else if (response.status === 404) {
+                        alert('Author not found.');
+                    } else {
+                        const error = await response.json();
+                        alert(`Error deleting author: ${error.error || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to delete author.');
+                }
             }
         }
+
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');

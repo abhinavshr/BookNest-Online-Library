@@ -100,11 +100,30 @@
             }
         }
 
-        function deletePublisher(publisherId) {
+        async function deletePublisher(publisherId) {
             if (confirm(`Are you sure you want to delete publisher with ID ${publisherId}?`)) {
-                console.log(`Deleting publisher: ${publisherId}`);
+                try {
+                    const response = await fetch(`http://localhost:5223/api/publisher/${publisherId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Publisher deleted successfully.');
+                        fetchPublisherData();
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error: ${errorData.error || 'Failed to delete publisher.'}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting publisher:', error);
+                    alert('An error occurred while deleting the publisher.');
+                }
             }
         }
+
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');

@@ -66,10 +66,16 @@ namespace BookNest.Services
         }
 
 
-        public Task DeleteBook(Guid id)
+        public async Task DeleteBook(Guid id)
         {
-            throw new NotImplementedException();
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.BookId == id);
+            if (book == null)
+                throw new KeyNotFoundException("Book not found.");
+
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
         }
+
 
         public async Task<List<GetAllBookDto>> GetAllBooks()
         {
@@ -82,7 +88,6 @@ namespace BookNest.Services
                 })
                 .ToListAsync();
         }
-
 
 
         public Task<GetAllBookDto> GetById(Guid id)

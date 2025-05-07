@@ -49,5 +49,20 @@ namespace BookNest.Controllers
                 return StatusCode(500, "An error occurred: " + ex.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDiscount(Guid id)
+        {
+            try
+            {
+                await _discountService.DeleteDiscount(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+        }
+
     }
 }

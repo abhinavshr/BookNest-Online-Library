@@ -108,12 +108,32 @@
 
 
 
-        function deleteAnnouncement(announcementId) {
+        async function deleteAnnouncement(announcementId) {
             if (confirm(`Are you sure you want to delete announcement with ID ${announcementId}?`)) {
-                console.log(`Deleting announcement: ${announcementId}`);
-                // Add actual delete logic here by calling the delete API endpoint
+                try {
+                    const response = await fetch(`http://localhost:5223/api/announcement/${announcementId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Announcement deleted successfully.');
+                        fetchAnnouncementData(); // Refresh the table
+                    } else if (response.status === 404) {
+                        alert('Announcement not found.');
+                    } else {
+                        const error = await response.json();
+                        alert(`Error deleting announcement: ${error.error || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to delete announcement.');
+                }
             }
         }
+
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');
