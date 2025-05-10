@@ -58,7 +58,8 @@ namespace BookNest.Services
                 PhysicalAvailability = bookDto.PhysicalAvailability,
                 PublicationDate = bookDto.PublicationDate,
                 Language = bookDto.Language,
-                Description = bookDto.Description
+                Description = bookDto.Description,
+                AwardWinners = bookDto.AwardWinners
             };
 
             await _context.Books.AddAsync(book);
@@ -117,7 +118,8 @@ namespace BookNest.Services
                 Rating = book.Rating,
                 Stock = book.Stock,
                 PhysicalAvailability = book.PhysicalAvailability,
-                PublicationDate = book.PublicationDate
+                PublicationDate = book.PublicationDate,
+                AwardWinners = book.AwardWinners
             };
 
             return bookDto;
@@ -147,6 +149,7 @@ namespace BookNest.Services
             book.Stock = bookDto.Stock;
             book.PhysicalAvailability = bookDto.PhysicalAvailability;
             book.PublicationDate = bookDto.PublicationDate;
+            book.AwardWinners = bookDto.AwardWinners;
 
             await _context.SaveChangesAsync();
         }

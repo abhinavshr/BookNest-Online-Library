@@ -29,6 +29,8 @@ namespace BookNest.Entities
 
         public bool PhysicalAvailability { get; set; }
 
+        public string? AwardWinners { get; set; }
+
         public DateTime PublicationDate { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
