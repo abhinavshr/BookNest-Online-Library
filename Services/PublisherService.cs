@@ -74,14 +74,34 @@ namespace BookNest.Services
         }
 
 
-        public Task<GetAllPublisherDto> GetPublisherById(Guid id)
+        public async Task<GetAllPublisherDto> GetPublisherById(Guid id)
         {
-            throw new NotImplementedException();
+            var publisher = await _context.Publishers.FindAsync(id);
+
+            if (publisher == null)
+                throw new KeyNotFoundException("Publisher not found");
+
+            return new GetAllPublisherDto
+            {
+                PublisherId = publisher.PublisherId,
+                Name = publisher.Name,
+                Description = publisher.Description
+            };
         }
 
-        public Task UpdatePublisher(Guid id, UpdatePublisherDto publisherDto)
+        public async Task UpdatePublisher(Guid id, UpdatePublisherDto publisherDto)
         {
-            throw new NotImplementedException();
+            var publisher = await _context.Publishers.FindAsync(id);
+
+            if (publisher == null)
+                throw new Exception("Publisher not found");
+
+            publisher.Name = publisherDto.Name;
+            publisher.Description = publisherDto.Description;
+
+            _context.Publishers.Update(publisher);
+            await _context.SaveChangesAsync();
         }
+
     }
 }

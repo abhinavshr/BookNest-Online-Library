@@ -87,12 +87,17 @@
                 genreList.forEach((genre, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${genre.genreId}</td>
-                        <td>${genre.name}</td>
-                        <td>${genre.description}</td>
-                        <td><button onclick="deleteGenre('${genre.genreId}')">Delete</button></td>
-                    `;
+                            <td>${index + 1}</td>
+                            <td>${genre.genreId}</td>
+                            <td>${genre.name}</td>
+                            <td>${genre.description}</td>
+                            <td>
+                                <a href="editgeneres.html?id=${genre.genreId}">
+                                    <button>Edit</button>
+                                </a>
+                                <button onclick="deleteGenre('${genre.genreId}')">Delete</button>
+                            </td>
+                        `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
@@ -119,8 +124,6 @@
                 console.error("Error deleting genre:", error);
             }
         }
-
-
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');

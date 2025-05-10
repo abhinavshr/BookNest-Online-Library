@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Publication</title>
+    <title>Edit Publication</title>
     <link rel="stylesheet" href="../../css/add_publication.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -27,7 +27,7 @@
     <div id="content">
         <div class="form-container">
             <h2>Edit Existing Publication</h2>
-            <form id="addPublicationForm" action="javascript:void(0);">
+            <form id="editPublicationForm" action="javascript:void(0);">
                 <div class="form-group">
                     <label for="publicationName">Name</label>
                     <input type="text" id="publicationName" name="publicationName" required>
@@ -36,7 +36,7 @@
                     <label for="publicationDescription">Description</label>
                     <textarea id="publicationDescription" name="publicationDescription" rows="4" required></textarea>
                 </div>
-         
+                <button type="submit">Update Publication</button>
             </form>
             <div id="responseMessage"></div>
         </div>
@@ -63,38 +63,64 @@
             return JSON.parse(jsonPayload);
         }
 
-        document.getElementById("addPublicationForm").addEventListener("submit", function (e) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const publisherId = urlParams.get('id');
+
+        async function loadPublisherData() {
+            try {
+                const response = await fetch(`http://localhost:5223/api/publisher/${publisherId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load publisher data');
+
+                const data = await response.json();
+                document.getElementById("publicationName").value = data.name;
+                document.getElementById("publicationDescription").value = data.description;
+            } catch (error) {
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="error">Error loading data: ${error.message}</p>`;
+            }
+        }
+
+        document.getElementById("editPublicationForm").addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            const publicationName = document.getElementById("publicationName").value;
-            const publicationDescription = document.getElementById("publicationDescription").value;
+            const updatedData = {
+                name: document.getElementById("publicationName").value,
+                description: document.getElementById("publicationDescription").value
+            };
 
-            const publicationData = { name: publicationName, description: publicationDescription };
-            console.log(publicationData);
-
-            fetch('http://localhost:5223/api/publisher/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(publicationData)
-            })
-                .then(response => {
-                    if (response.ok) return response.json();
-                    throw new Error('Failed to add publication');
-                })
-                .then(data => {
-                    document.getElementById("responseMessage").innerHTML =
-                        `<p class="success">Publication added successfully! Redirecting...</p>`;
-                    setTimeout(() => {
-                        window.location.href = 'publication_management.html';
-                    }, 1000);
-                })
-                .catch(error => {
-                    document.getElementById("responseMessage").innerHTML =
-                        `<p class="error">Error: ${error.message}</p>`;
+            try {
+                const response = await fetch(`http://localhost:5223/api/publisher/${publisherId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedData)
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to update publisher');
+                }
+
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="success">Publication updated successfully! Redirecting...</p>`;
+                setTimeout(() => {
+                    window.location.href = 'publication_management.html';
+                }, 1000);
+
+            } catch (error) {
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="error">Error: ${error.message}</p>`;
+            }
         });
+
+        window.onload = loadPublisherData;
     </script>
 </body>
 </html>

@@ -70,5 +70,46 @@ namespace BookNest.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetAllPublisherDto>> GetPublisherById(Guid id)
+        {
+            try
+            {
+                var publisher = await _publisherService.GetPublisherById(id);
+                return Ok(publisher);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while retrieving the publisher.", details = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePublisher(Guid id, [FromBody] UpdatePublisherDto publisherDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                await _publisherService.UpdatePublisher(id, publisherDto);
+                return Ok(new { message = "Publisher updated successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while updating the publisher." });
+            }
+        }
+
+
     }
 }

@@ -88,12 +88,17 @@
                 authorList.forEach((author, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${author.authorId}</td>
-                    <td>${author.name}</td>
-                    <td>${author.biography}</td>
-                    <td><button onclick="deleteAuthor('${author.authorId}')">Delete</button></td>
-                `;
+                        <td>${index + 1}</td>
+                        <td>${author.authorId}</td>
+                        <td>${author.name}</td>
+                        <td>${author.biography}</td>
+                        <td>
+                            <a href="editauthor.html?id=${author.authorId}">
+                                <button>Edit</button>
+                            </a>
+                            <button onclick="deleteAuthor('${author.authorId}')">Delete</button>
+                        </td>
+                    `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
@@ -126,7 +131,6 @@
                 }
             }
         }
-
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');

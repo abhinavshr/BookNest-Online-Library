@@ -54,14 +54,35 @@ namespace BookNest.Services
         }
 
 
-        public Task<GetAllGenreDto> GetById(Guid id)
+        public async Task<GetAllGenreDto> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var genre = await _context.Genres.FindAsync(id);
+
+            if (genre == null)
+                throw new KeyNotFoundException("Genre not found.");
+
+            return new GetAllGenreDto
+            {
+                GenreId = genre.GenreId,
+                Name = genre.Name,
+                Description = genre.Description
+            };
         }
 
-        public Task UpdateGenre(Guid id, UpdateGenreDto genreDto)
+
+        public async Task UpdateGenre(Guid id, UpdateGenreDto genreDto)
         {
-            throw new NotImplementedException();
+            var genre = await _context.Genres.FindAsync(id);
+
+            if (genre == null)
+                throw new KeyNotFoundException("Genre not found.");
+
+            genre.Name = genreDto.Name;
+            genre.Description = genreDto.Description;
+
+            _context.Genres.Update(genre);
+            await _context.SaveChangesAsync();
         }
+
     }
 }

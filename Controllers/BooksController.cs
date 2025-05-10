@@ -85,36 +85,46 @@ namespace BookNest.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             try
             {
-                var book = await _bookService.GetById(id);
-                if (book == null)
-                {
-                    return NotFound(new { Message = "Book not found." });
-                }
-                return Ok(book);
+                var bookDto = await _bookService.GetById(id);
+                return Ok(bookDto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Error = ex.Message });
+                return StatusCode(500, new { message = "An error occurred while fetching the book.", error = ex.Message });
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDto bookDto)
+        [HttpPut("updatebook/{id}")]
+        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDto updateBookDto)
         {
+            if (updateBookDto == null)
+            {
+                return BadRequest(new { message = "Invalid book data." });
+            }
+
             try
             {
-                await _bookService.UpdateBook(id, bookDto);
-                return Ok(new { Message = "Book updated successfully." });
+                await _bookService.UpdateBook(id, updateBookDto);
+                return Ok(new { message = "Book updated successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                return StatusCode(500, new { message = "An error occurred while updating the book.", error = ex.Message });
             }
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(Guid id)

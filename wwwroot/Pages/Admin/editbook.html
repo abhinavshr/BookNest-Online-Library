@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Add Book</title>
+    <title>Edit Book</title>
     <link rel="stylesheet" href="../../css/addbook.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -26,7 +26,7 @@
     <div id="content">
         <div class="form-container">
             <h2>Edit Existing Book</h2>
-            <form id="addBookForm" action="javascript:void(0);">
+            <form id="editBookForm" action="javascript:void(0);">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" required />
@@ -81,7 +81,7 @@
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
                 </div>
-            
+                <button type="submit">Save Changes</button>
             </form>
             <div id="responseMessage"></div>
         </div>
@@ -168,15 +168,20 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            populateDropdown('http://localhost:5223/api/author/getallauthors', 'authorId', 'authorId', 'name');
-            fetchGenreData();
-            fetchPublisherData();
+        document.addEventListener("DOMContentLoaded", async () => {
+            const bookId = new URLSearchParams(window.location.search).get('bookId');
 
-            document.getElementById("addBookForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
+            await populateDropdown('http://localhost:5223/api/author/getallauthors', 'authorId', 'authorId', 'name');
+            await fetchGenreData();
+            await fetchPublisherData();
 
-                const bookData = {
+            if (bookId) {
+                fetchBookData(bookId);
+            }
+
+            document.getElementById("editBookForm").addEventListener("submit", async (e) => {
+
+                const updatedBookData = {
                     title: document.getElementById("title").value,
                     isbn: document.getElementById("isbn").value,
                     authorId: document.getElementById("authorId").value,
@@ -191,23 +196,23 @@
                 };
 
                 try {
-                    const response = await fetch('http://localhost:5223/api/book/addbook', {
-                        method: 'POST',
+                    const response = await fetch(`http://localhost:5223/api/book/updatebook/${bookId}`, {
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + token
                         },
-                        body: JSON.stringify(bookData)
+                        body: JSON.stringify(updatedBookData)
                     });
 
                     if (response.ok) {
                         document.getElementById("responseMessage").innerHTML =
-                            `<p class="success">Book added successfully! Redirecting...</p>`;
+                            `<p class="success">Book updated successfully! Redirecting...</p>`;
                         setTimeout(() => {
                             window.location.href = 'book_management.html';
                         }, 1000);
                     } else {
-                        throw new Error("Failed to add book");
+                        throw new Error("Failed to update book");
                     }
                 } catch (error) {
                     document.getElementById("responseMessage").innerHTML =
@@ -215,6 +220,43 @@
                 }
             });
         });
+
+        async function fetchBookData(bookId) {
+            console.log("Fetching book data for ID:", bookId);
+
+            try {
+                const response = await fetch(`http://localhost:5223/api/book/${bookId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const book = await response.json();
+                    console.log("Fetched book data:", book); 
+
+                    document.getElementById("title").value = book.title;
+                    document.getElementById("isbn").value = book.isbn;
+                    document.getElementById("authorId").value = book.authorId;
+                    document.getElementById("genreId").value = book.genreId;
+                    document.getElementById("publisherId").value = book.publisherId;
+                    document.getElementById("price").value = book.price;
+                    document.getElementById("stock").value = book.stock;
+                    document.getElementById("physicalAvailability").value = book.physicalAvailability.toString();
+                    document.getElementById("publishedDate").value = book.publicationDate;
+                    document.getElementById("language").value = book.language;
+                    document.getElementById("description").value = book.description;
+
+                } else {
+                    throw new Error('Failed to fetch book data');
+                }
+            } catch (error) {
+                console.error('Error fetching book data:', error);
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
 
         function logout() {
             alert("Logging out...");

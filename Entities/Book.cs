@@ -34,6 +34,10 @@ namespace BookNest.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public Author Author { get; set; }
+        public Publisher Publisher { get; set; }
+        public Genre Genre { get; set; }
     }
 
 }
