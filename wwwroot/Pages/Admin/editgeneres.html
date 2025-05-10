@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Add Generes</title>
+    <title>Edit Generes</title>
     <link rel="stylesheet" href="../../css/add_generes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -25,17 +25,17 @@
 
     <div id="content">
         <div class="form-container">
-            <h2>Edit Existing Generes</h2>
-            <form id="addGeneresForm" action="javascript:void(0);">
+            <h2>Edit Existing Genre</h2>
+            <form id="editGeneresForm" action="javascript:void(0);">
                 <div class="form-group">
                     <label for="generesName">Name</label>
                     <input type="text" id="generesName" name="generesName" required>
                 </div>
                 <div class="form-group">
-                    <label for="authorBiography">Description</label>
-                    <textarea id="authorBiography" name="authorBiography" rows="4" required></textarea>
+                    <label for="generesDescription">Description</label>
+                    <textarea id="generesDescription" name="generesDescription" rows="4" required></textarea>
                 </div>
-         
+                <button type="submit">Update Genre</button>
             </form>
             <div id="responseMessage"></div>
         </div>
@@ -62,38 +62,64 @@
             return JSON.parse(jsonPayload);
         }
 
-        document.getElementById("addGeneresForm").addEventListener("submit", function (e) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const genreId = urlParams.get('id');
+
+        async function loadGenreData() {
+            try {
+                const response = await fetch(`http://localhost:5223/api/genres/${genreId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load genre data');
+
+                const data = await response.json();
+                document.getElementById("generesName").value = data.name;
+                document.getElementById("generesDescription").value = data.description;
+            } catch (error) {
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="error">Error loading data: ${error.message}</p>`;
+            }
+        }
+
+        document.getElementById("editGeneresForm").addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            const generesName = document.getElementById("generesName").value;
-            const generesDescription = document.getElementById("authorBiography").value;
+            const updatedData = {
+                name: document.getElementById("generesName").value,
+                description: document.getElementById("generesDescription").value
+            };
 
-            const genreData = { name: generesName, description: generesDescription };
-
-            fetch('http://localhost:5223/api/genres/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                body: JSON.stringify(genreData)
-            })
-                .then(response => {
-                    if (response.ok) return response.json();
-                    throw new Error('Failed to add genre');
-                })
-                .then(data => {
-                    document.getElementById("responseMessage").innerHTML =
-                        `<p class="success">Genre added successfully! Redirecting...</p>`;
-                    setTimeout(() => {
-                        window.location.href = 'generes_management.html';
-                    }, 1000);
-                })
-                .catch(error => {
-                    document.getElementById("responseMessage").innerHTML =
-                        `<p class="error">Error: ${error.message}</p>`;
+            try {
+                const response = await fetch(`http://localhost:5223/api/genres/${genreId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedData)
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to update genre');
+                }
+
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="success">Genre updated successfully! Redirecting...</p>`;
+                setTimeout(() => {
+                    window.location.href = 'generes_management.html';
+                }, 1000);
+
+            } catch (error) {
+                document.getElementById("responseMessage").innerHTML =
+                    `<p class="error">Error: ${error.message}</p>`;
+            }
         });
+
+        window.onload = loadGenreData;
 
         function logout() {
             alert("Logging out...");

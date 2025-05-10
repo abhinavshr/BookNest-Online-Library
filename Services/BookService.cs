@@ -90,14 +90,66 @@ namespace BookNest.Services
         }
 
 
-        public Task<GetAllBookDto> GetById(Guid id)
+        public async Task<GetAllBookDto> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Publisher)
+                .Include(b => b.Genre)
+                .FirstOrDefaultAsync(b => b.BookId == id);
+
+            if (book == null)
+            {
+                throw new KeyNotFoundException("Book not found.");
+            }
+
+            var bookDto = new GetAllBookDto
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                ISBN = book.ISBN,
+                AuthorId = book.AuthorId,
+                PublisherId = book.PublisherId,
+                GenreId = book.GenreId,
+                Language = book.Language,
+                Description = book.Description,
+                Price = book.Price,
+                Rating = book.Rating,
+                Stock = book.Stock,
+                PhysicalAvailability = book.PhysicalAvailability,
+                PublicationDate = book.PublicationDate
+            };
+
+            return bookDto;
         }
 
-        public Task UpdateBook(Guid id, UpdateBookDto bookDto)
+
+
+        public async Task UpdateBook(Guid id, UpdateBookDto bookDto)
         {
-            throw new NotImplementedException();
+            var book = await _context.Books
+                .FirstOrDefaultAsync(b => b.BookId == id);
+
+            if (book == null)
+            {
+                throw new KeyNotFoundException("Book not found.");
+            }
+
+            book.Title = bookDto.Title;
+            book.ISBN = bookDto.ISBN;
+            book.AuthorId = bookDto.AuthorId;
+            book.PublisherId = bookDto.PublisherId;
+            book.GenreId = bookDto.GenreId;
+            book.Language = bookDto.Language;
+            book.Description = bookDto.Description;
+            book.Price = bookDto.Price;
+            book.Rating = bookDto.Rating;
+            book.Stock = bookDto.Stock;
+            book.PhysicalAvailability = bookDto.PhysicalAvailability;
+            book.PublicationDate = bookDto.PublicationDate;
+
+            await _context.SaveChangesAsync();
         }
+
     }
 }

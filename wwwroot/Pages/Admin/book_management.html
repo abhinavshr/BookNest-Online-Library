@@ -87,12 +87,17 @@
                 bookList.forEach((book, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${book.bookId}</td>
-                    <td>${book.title}</td>
-                    <td>${book.price.toFixed(2)}</td>
-                    <td><button onclick="deleteBook('${book.bookId}')">Delete</button></td>
-                `;
+                        <td>${index + 1}</td>
+                        <td>${book.bookId}</td>
+                        <td>${book.title}</td>
+                        <td>${book.price.toFixed(2)}</td>
+                        <td>
+                            <a href="editbook.html?bookId=${book.bookId}">
+                                <button>Edit</button>
+                            </a>
+                            <button onclick="deleteBook('${book.bookId}')">Delete</button>
+                        </td>
+                    `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
@@ -124,6 +129,9 @@
             }
         }
 
+        function editBook(bookId) {
+            window.location.href = `addbook.html?bookId=${bookId}`;
+        }
 
         function checkUserRole() {
             const loggedInUserRole = localStorage.getItem('userRole');

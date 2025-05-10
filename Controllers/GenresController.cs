@@ -71,5 +71,39 @@ public class GenresController : ControllerBase
         }
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        try
+        {
+            var genre = await _genreService.GetById(id);
+            return Ok(genre);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateGenre(Guid id, [FromBody] UpdateGenreDto genreDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _genreService.UpdateGenre(id, genreDto);
+            return Ok(new { message = "Genre updated successfully." });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = "An error occurred while updating the genre." });
+        }
+    }
 
 }
