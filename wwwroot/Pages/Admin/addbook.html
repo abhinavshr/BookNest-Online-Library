@@ -219,9 +219,10 @@
         });
 
         function logout() {
-            alert("Logging out...");
             localStorage.removeItem("jwtToken");
-            window.location.href = "../login.html";
+            localStorage.removeItem("userRole");
+            alert("You have been logged out.");
+            window.location.href = '../login.html';
         }
     </script>
 </body>
