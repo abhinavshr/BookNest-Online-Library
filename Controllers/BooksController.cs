@@ -56,6 +56,7 @@ namespace BookNest.Controllers
                     Stock = bookDto.Stock,
                     PhysicalAvailability = bookDto.PhysicalAvailability,
                     PublicationDate = bookDto.PublicationDate,
+                    AwardWinners = bookDto.AwardWinners,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
@@ -74,8 +75,6 @@ namespace BookNest.Controllers
                 });
             }
         }
-
-
 
         [HttpGet]
         public async Task<ActionResult<List<GetAllBookDto>>> GetAllBooks()
