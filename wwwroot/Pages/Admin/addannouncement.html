@@ -82,8 +82,10 @@
         });
 
         function logout() {
-            alert("Logging out...");
-            // You can also clear tokens or redirect here
+            localStorage.removeItem("jwtToken");
+            localStorage.removeItem("userRole");
+            alert("You have been logged out.");
+            window.location.href = '../login.html';
         }
     </script>
 </body>

@@ -97,6 +97,13 @@
                         `<p class="error">Error: ${error.message}</p>`;
                 });
         });
+
+        function logout() {
+            localStorage.removeItem("jwtToken");
+            localStorage.removeItem("userRole");
+            alert("You have been logged out.");
+            window.location.href = '../login.html';
+        }
     </script>
 </body>
 </html>

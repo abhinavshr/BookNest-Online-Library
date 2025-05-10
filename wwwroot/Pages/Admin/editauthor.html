@@ -36,7 +36,6 @@
                     <label for="authorBiography">Biography</label>
                     <textarea id="authorBiography" name="authorBiography" rows="4" required></textarea>
                 </div>
-                <!-- Add the submit button here -->
                 <div class="form-group">
                     <button type="submit" class="submit-button">Update Author</button>
                 </div>
@@ -128,6 +127,8 @@
 
         function logout() {
             localStorage.removeItem("jwtToken");
+            localStorage.removeItem("userRole");
+            alert("You have been logged out.");
             window.location.href = '../login.html';
         }
     </script>
