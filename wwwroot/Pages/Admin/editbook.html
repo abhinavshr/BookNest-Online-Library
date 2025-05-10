@@ -81,6 +81,10 @@
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="awardWinners">Award Winners</label>
+                    <input type="text" id="awardWinners" name="awardWinners" placeholder="Enter award names" />
+                </div>
                 <button type="submit">Save Changes</button>
             </form>
             <div id="responseMessage"></div>
@@ -192,7 +196,8 @@
                     physicalAvailability: document.getElementById("physicalAvailability").value === "true",
                     publishedDate: document.getElementById("publishedDate").value,
                     language: document.getElementById("language").value,
-                    description: document.getElementById("description").value
+                    description: document.getElementById("description").value,
+                    awardWinners: document.getElementById("awardWinners").value
                 };
 
                 try {
@@ -247,6 +252,7 @@
                     document.getElementById("publishedDate").value = book.publicationDate;
                     document.getElementById("language").value = book.language;
                     document.getElementById("description").value = book.description;
+                    document.getElementById("awardWinners").value = book.awardWinners;
 
                 } else {
                     throw new Error('Failed to fetch book data');

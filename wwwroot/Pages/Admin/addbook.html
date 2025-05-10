@@ -82,6 +82,10 @@
                     <textarea id="description" name="description" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
+                    <label for="awardWinners">Award Winners</label>
+                    <input type="text" id="awardWinners" name="awardWinners" />
+                </div>
+                <div class="form-group">
                     <button type="submit">Add Book</button>
                 </div>
             </form>
@@ -189,7 +193,8 @@
                     physicalAvailability: document.getElementById("physicalAvailability").value === "true",
                     publishedDate: document.getElementById("publishedDate").value,
                     language: document.getElementById("language").value,
-                    description: document.getElementById("description").value
+                    description: document.getElementById("description").value,
+                    awardWinners: document.getElementById("awardWinners").value
                 };
 
                 try {
