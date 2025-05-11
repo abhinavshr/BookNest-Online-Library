@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Cart</title>
+    <link rel="stylesheet" href="../../css/cart.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="../../index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="cart.html"><span class="material-icons cart-icon active carts">shopping_cart</span></a>
+            </div>
+            <div class="nav-inside">
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Settings</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        var isClickInside = event.target.closest(".profile-dropdown");
+        if (!isClickInside) {
+            document.getElementById("profileMenu").style.display = "none";
+        }
+    });
+</script>
