@@ -3114,23 +3114,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Rezone\\.nuget\\packages\\": {},
+    "C:\\Users\\acer\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Rezone\\Desktop\\.Net coursework\\BookNest-Online-Library\\BookNest-Online-Library\\BookNest.csproj",
+      "projectUniqueName": "C:\\Users\\acer\\Desktop\\,net cw\\BookNest-Online-Library\\BookNest.csproj",
       "projectName": "BookNest",
-      "projectPath": "C:\\Users\\Rezone\\Desktop\\.Net coursework\\BookNest-Online-Library\\BookNest-Online-Library\\BookNest.csproj",
-      "packagesPath": "C:\\Users\\Rezone\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Rezone\\Desktop\\.Net coursework\\BookNest-Online-Library\\BookNest-Online-Library\\obj\\",
+      "projectPath": "C:\\Users\\acer\\Desktop\\,net cw\\BookNest-Online-Library\\BookNest.csproj",
+      "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\acer\\Desktop\\,net cw\\BookNest-Online-Library\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Rezone\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3157,7 +3157,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -3223,7 +3224,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

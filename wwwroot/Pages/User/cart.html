@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Cart</title>
+    <title>Your Cart</title>
     <link rel="stylesheet" href="../../css/cart.css" />
     <link rel="stylesheet" href="../../css/user_navigation_box.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -12,7 +12,7 @@
     <div class="navigation-box">
         <div style="flex-direction: row; display: flex;">
             <div class="nav-inside">
-                <a href="../../index.html">Home</a>
+                <a href="index.html">Home</a>
             </div>
             <div class="nav-inside">
                 <a href="best_seller.html">Best Seller</a>
@@ -32,17 +32,87 @@
         </div>
         <div style="flex-direction: row; display: flex;">
             <div class="nav-inside">
-                <a href="cart.html"><span class="material-icons cart-icon active carts">shopping_cart</span></a>
+                <a href="cart.html" class="active"><span class="material-icons cart-icon">shopping_cart</span></a>
             </div>
             <div class="nav-inside">
                 <div class="profile-dropdown">
                     <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
                     <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
-                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
+                        <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
                         <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
                         <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Settings</a>
                         <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-section">
+        <div class="cart-container">
+            <h1>Your Shopping Cart</h1>
+
+            <div class="cart-items">
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
+                    </div>
+                    <div class="item-details">
+                        <h3>Modern Spaces</h3>
+                        <p class="author">By Francisco Spencer</p>
+                        <p class="price">Rs.896</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn">-</button>
+                            <span class="quantity">1</span>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="remove-btn"><i class="fas fa-trash"></i> Remove</button>
+                        <button class="wishlist-btn"><i class="fas fa-heart"></i> Move to Wishlist</button>
+                    </div>
+                </div>
+
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="https://m.media-amazon.com/images/I/51xwGSNX-EL._SY425_.jpg" alt="Book Cover">
+                    </div>
+                    <div class="item-details">
+                        <h3>The Silent Patient</h3>
+                        <p class="author">By Alex Michaelides</p>
+                        <p class="price">Rs.1,199</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn">-</button>
+                            <span class="quantity">2</span>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="remove-btn"><i class="fas fa-trash"></i> Remove</button>
+                        <button class="wishlist-btn"><i class="fas fa-heart"></i> Move to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal (3 items)</span>
+                        <span>Rs.3,294</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>Rs.50</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span>Rs.329</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>Rs.3,673</span>
+                    </div>
+                    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
                 </div>
             </div>
         </div>
