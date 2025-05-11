@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Your Orders</title>
+    <link rel="stylesheet" href="../../css/order.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
+            </div>
+            <div class="nav-inside">
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Settings</a>
+                        <a href="orders.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" class="active">Your Orders</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-section">
+        <div class="orders-container">
+            <h1>Your Orders</h1>
+
+            <div class="orders-filter">
+                <button class="filter-btn active">All Orders</button>
+                <button class="filter-btn">Pending</button>
+                <button class="filter-btn">Delivered</button>
+                <button class="filter-btn">Cancelled</button>
+            </div>
+
+            <div class="orders-list">
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-date">Order Placed: May 15, 2023</span>
+                            <span class="order-total">Total: Rs.3,673</span>
+                            <span class="order-id">Order #123-4567890-1234567</span>
+                        </div>
+                        <div class="order-status delivered">
+                            Delivered on May 18, 2023
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <div class="order-item">
+                            <div class="item-image">
+                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
+                            </div>
+                            <div class="item-details">
+                                <h3>Modern Spaces</h3>
+                                <p class="author">By Francisco Spencer</p>
+                                <p class="price">Rs.896 × 1</p>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn"><i class="fas fa-box"></i> Track Package</button>
+                                <button class="action-btn"><i class="fas fa-undo"></i> Return Item</button>
+                                <button class="action-btn"><i class="fas fa-star"></i> Rate Product</button>
+                            </div>
+                        </div>
+
+                        <div class="order-item">
+                            <div class="item-image">
+                                <img src="https://m.media-amazon.com/images/I/51xwGSNX-EL._SY425_.jpg" alt="Book Cover">
+                            </div>
+                            <div class="item-details">
+                                <h3>The Silent Patient</h3>
+                                <p class="author">By Alex Michaelides</p>
+                                <p class="price">Rs.1,199 × 2</p>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn"><i class="fas fa-box"></i> Track Package</button>
+                                <button class="action-btn"><i class="fas fa-undo"></i> Return Item</button>
+                                <button class="action-btn"><i class="fas fa-star"></i> Rate Product</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <span class="order-date">Order Placed: April 28, 2023</span>
+                            <span class="order-total">Total: Rs.2,495</span>
+                            <span class="order-id">Order #123-9876543-1234567</span>
+                        </div>
+                        <div class="order-status cancelled">
+                            Cancelled on April 29, 2023
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <div class="order-item">
+                            <div class="item-image">
+                                <img src="https://m.media-amazon.com/images/I/51mN3bY0JjL._SY425_.jpg" alt="Book Cover">
+                            </div>
+                            <div class="item-details">
+                                <h3>The Psychology of Money</h3>
+                                <p class="author">By Morgan Housel</p>
+                                <p class="price">Rs.1,299 × 1</p>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn" disabled><i class="fas fa-shopping-cart"></i> Buy Again</button>
+                            </div>
+                        </div>
+
+                        <div class="order-item">
+                            <div class="item-image">
+                                <img src="https://m.media-amazon.com/images/I/51mN3bY0JjL._SY425_.jpg" alt="Book Cover">
+                            </div>
+                            <div class="item-details">
+                                <h3>Atomic Habits</h3>
+                                <p class="author">By James Clear</p>
+                                <p class="price">Rs.1,196 × 1</p>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn" disabled><i class="fas fa-shopping-cart"></i> Buy Again</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        var isClickInside = event.target.closest(".profile-dropdown");
+        var menu = document.getElementById("profileMenu");
+
+        if (!isClickInside) {
+            menu.style.display = "none";
+        }
+    });
+</script>
