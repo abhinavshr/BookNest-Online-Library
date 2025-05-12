@@ -39,6 +39,10 @@ namespace BookNest.Controllers
                     details = ModelState.Values.SelectMany(v => v.Errors)
                 });
             }
+            if (bookDto.PublicationDate == default(DateTime) || bookDto.PublicationDate == DateTime.MinValue)
+            {
+                return BadRequest(new { error = "Publication Date cannot be default or min value." });
+            }
 
             try
             {
@@ -124,6 +128,16 @@ namespace BookNest.Controllers
             }
         }
 
+        [HttpGet("books-published-in-last-week")]
+        public async Task<ActionResult<List<GetAllBookDto>>> GetBooksPublishedInLastWeek()
+        {
+            var books = await _bookService.GetBooksPublishedInLastWeek();
+
+            if (books.Count == 0)
+                return NotFound("No books published in the last week.");
+
+            return Ok(books);
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(Guid id)
@@ -143,5 +157,61 @@ namespace BookNest.Controllers
             }
         }
 
+        [HttpGet("top-selling")]
+        public async Task<ActionResult<GetAllBookDto>> GetTopSellingBook()
+        {
+            Console.WriteLine("Top-selling endpoint hit");
+            var topBook = await _bookService.GetTopSellingBook();
+
+            if (topBook == null)
+            {
+                Console.WriteLine("No top-selling book found.");
+                return NotFound("No sales data available.");
+            }
+
+            Console.WriteLine("Top book: " + topBook.Title);
+            return Ok(topBook);
+        }
+
+        [HttpGet("books-with-awards")]
+        public async Task<ActionResult<List<GetAllBookDto>>> GetBooksWithAwards()
+        {
+            var booksWithAwards = await _bookService.GetBooksWithAwards();
+
+            if (booksWithAwards.Count == 0)
+                return NotFound("No books with awards found.");
+
+            return Ok(booksWithAwards);
+        }
+
+        [HttpGet("books-published-in-last-month")]
+        public async Task<ActionResult<List<GetAllBookDto>>> GetBooksPublishedInLastMonth()
+        {
+            var books = await _bookService.GetBooksPublishedInLastMonth();
+
+            if (books.Count == 0)
+                return NotFound("No books published in the last month.");
+
+            return Ok(books);
+        }
+
+        [HttpGet("comingsoon")]
+        public async Task<ActionResult<List<GetAllBookDto>>> GetComingSoonBooks()
+        {
+            try
+            {
+                var books = await _bookService.GetComingSoonBooks();
+                if (books == null || books.Count == 0)
+                {
+                    return NotFound("No upcoming books found.");
+                }
+
+                return Ok(books);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

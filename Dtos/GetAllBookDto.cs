@@ -20,5 +20,8 @@ namespace BookNest.Dtos
         public bool PhysicalAvailability { get; set; }
         public DateTime PublicationDate { get; set; }
         public string? AwardWinners { get; set; }
+        public string AuthorName { get; set; }
+        public int SoldCount { get; set; }
+
     }
 }

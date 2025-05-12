@@ -182,6 +182,9 @@
             document.getElementById("addBookForm").addEventListener("submit", async (e) => {
                 e.preventDefault();
 
+                const publishedDate = document.getElementById("publishedDate").value;
+                const dateWithTime = new Date(publishedDate + 'T00:00:00Z');
+
                 const bookData = {
                     title: document.getElementById("title").value,
                     isbn: document.getElementById("isbn").value,
@@ -191,7 +194,7 @@
                     price: parseFloat(document.getElementById("price").value),
                     stock: parseInt(document.getElementById("stock").value),
                     physicalAvailability: document.getElementById("physicalAvailability").value === "true",
-                    publishedDate: document.getElementById("publishedDate").value,
+                    publicationDate: dateWithTime.toISOString(),
                     language: document.getElementById("language").value,
                     description: document.getElementById("description").value,
                     awardWinners: document.getElementById("awardWinners").value

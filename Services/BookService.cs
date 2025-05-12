@@ -46,6 +46,20 @@ namespace BookNest.Services
                 throw new ArgumentException("Invalid Publisher ID.");
             }
 
+            if (bookDto.PublicationDate == default(DateTime) || bookDto.PublicationDate == DateTime.MinValue)
+            {
+                bookDto.PublicationDate = DateTime.Now;
+            }
+
+            if (string.IsNullOrWhiteSpace(bookDto.Title))
+            {
+                throw new ArgumentException("Title cannot be empty.");
+            }
+            if (bookDto.Price <= 0)
+            {
+                throw new ArgumentException("Price must be greater than zero.");
+            }
+
             var book = new Book
             {
                 Title = bookDto.Title,
@@ -56,15 +70,24 @@ namespace BookNest.Services
                 Price = bookDto.Price,
                 Stock = bookDto.Stock,
                 PhysicalAvailability = bookDto.PhysicalAvailability,
-                PublicationDate = bookDto.PublicationDate,
+                PublicationDate = bookDto.PublicationDate.ToUniversalTime(),
                 Language = bookDto.Language,
                 Description = bookDto.Description,
                 AwardWinners = bookDto.AwardWinners
             };
 
-            await _context.Books.AddAsync(book);
-            await _context.SaveChangesAsync();
+            try
+            {
+                Console.WriteLine($"Publication Date: {bookDto.PublicationDate}");
+                await _context.Books.AddAsync(book);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while adding the book.", ex);
+            }
         }
+
 
 
         public async Task DeleteBook(Guid id)
@@ -81,11 +104,119 @@ namespace BookNest.Services
         public async Task<List<GetAllBookDto>> GetAllBooks()
         {
             return await _context.Books
+                .Include(book => book.Author)
                 .Select(book => new GetAllBookDto
                 {
                     BookId = book.BookId,
                     Title = book.Title,
-                    Price = book.Price
+                    Price = book.Price,
+                    AuthorName = book.Author.Name
+                })
+                .ToListAsync();
+        }
+
+        public async Task<GetAllBookDto> GetTopSellingBook()
+        {
+            var topSelling = await _context.OrderItems
+                .GroupBy(oi => oi.BookId)
+                .Select(g => new
+                {
+                    BookId = g.Key,
+                    SoldCount = g.Sum(oi => oi.Quantity)
+                })
+                .OrderByDescending(g => g.SoldCount)
+                .FirstOrDefaultAsync();
+
+            if (topSelling == null)
+                return null;
+
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Where(b => b.BookId == topSelling.BookId)
+                .Select(book => new GetAllBookDto
+                {
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    Price = book.Price,
+                    AuthorName = book.Author.Name,
+                    SoldCount = topSelling.SoldCount
+                })
+                .FirstOrDefaultAsync();
+
+            return book;
+        }
+
+        public async Task<List<GetAllBookDto>> GetBooksWithAwards()
+        {
+            var awardWinningBooks = await _context.Books
+                .Include(book => book.Author)
+                .Where(book => !string.IsNullOrEmpty(book.AwardWinners))
+                .Select(book => new GetAllBookDto
+                {
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    Price = book.Price,
+                    AuthorName = book.Author.Name,
+                    AwardWinners = book.AwardWinners
+                })
+                .ToListAsync();
+
+            if (awardWinningBooks.Count == 0)
+            {
+                return new List<GetAllBookDto>();
+            }
+
+            return awardWinningBooks;
+        }
+
+        public async Task<List<GetAllBookDto>> GetBooksPublishedInLastMonth()
+        {
+            var oneMonthAgo = DateTime.UtcNow.AddMonths(-1);
+
+            return await _context.Books
+                .Include(book => book.Author)
+                .Where(book => book.PublicationDate >= oneMonthAgo)
+                .Select(book => new GetAllBookDto
+                {
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    Price = book.Price,
+                    AuthorName = book.Author.Name
+                })
+                .ToListAsync();
+        }
+
+
+        public async Task<List<GetAllBookDto>> GetBooksPublishedInLastWeek()
+        {
+            var lastWeek = DateTime.UtcNow.AddDays(-7);
+
+            return await _context.Books
+                .Include(book => book.Author)
+                .Where(book => book.PublicationDate >= lastWeek)
+                .Select(book => new GetAllBookDto
+                {
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    Price = book.Price,
+                    AuthorName = book.Author.Name
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<GetAllBookDto>> GetComingSoonBooks()
+        {
+            var currentDate = DateTime.UtcNow;
+
+            return await _context.Books
+                .Include(book => book.Author)
+                .Where(book => book.PublicationDate > currentDate)
+                .Select(book => new GetAllBookDto
+                {
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    Price = book.Price,
+                    AuthorName = book.Author.Name
                 })
                 .ToListAsync();
         }
