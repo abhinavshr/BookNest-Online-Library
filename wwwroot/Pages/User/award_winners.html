@@ -125,12 +125,12 @@
              <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
              <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
              <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
-             <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                 <div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
-                     <label style="font-size: 14px; font-weight: bold; font-family: Arial;">Add To Cart</label>
-                     <span class="material-icons" style="color: black; margin-left: 5px; font-size: 16px;">shopping_cart</span>
-                 </div>
-             </div>
+             <button
+                style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
+                onclick="addToCart('${book.bookId}')">
+                <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
+                <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
+            </button>
          </div>
      `;
             bookList.appendChild(card);
@@ -186,6 +186,60 @@
         localStorage.removeItem("userRole");
         alert("You have been logged out.");
         window.location.href = '../login.html';
+    }
+
+    function addToCart(bookId) {
+        console.log("Book ID:", bookId);
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token) {
+            alert("User not authenticated.");
+            return;
+        }
+
+        if (!userId) {
+            alert('You must be logged in to add items to your cart.');
+            return;
+        }
+
+        const book = bookData.find(b => b.bookId === bookId);
+
+        if (!book) {
+            alert('Book not found!');
+            return;
+        }
+
+        const cartItem = {
+            userId: userId,
+            bookId: book.bookId,
+            quantity: 1
+        };
+
+        fetch("http://localhost:5223/api/cartitem", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(cartItem)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Network response was not ok");
+                return res.json();
+            })
+            .then(json => {
+                if (json) {
+                    console.log("Success:", json);
+                    alert(json.message);
+                } else {
+                    console.log("Success: No content returned.");
+                }
+            })
+            .catch(error => {
+                console.error("Error adding to cart:", error);
+                alert("Failed to add item to cart");
+            });
     }
 </script>
 

@@ -1,6 +1,6 @@
 ﻿using BookNest.Dtos;
 using BookNest.Services.Interface;
-using Microsoft.AspNetCore.Mvc;    // Update with the actual namespace where InsertDiscountDto is defined
+using Microsoft.AspNetCore.Mvc;    
 
 namespace BookNest.Controllers
 {

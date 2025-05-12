@@ -81,6 +81,7 @@ builder.Services.AddScoped<IGenreService, GenresService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<ICartItemService, CartItemService>();
 
 
 var app = builder.Build();
