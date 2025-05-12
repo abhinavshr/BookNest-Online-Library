@@ -17,7 +17,14 @@
 
             <input type="submit" value="Login">
         </form>
+
         <div id="responseMessage"></div>
+
+        <p style="text-align: center; color: #333;">
+            Don't have an account?
+            <a href="User/register.html" style="color: #4CAF50; text-decoration: none; font-weight: bold;">Sign up here</a>
+        </p>
+
     </div>
 
     <script>
@@ -47,6 +54,7 @@
                         const role = data.role;
                         localStorage.setItem("jwtToken", token);
                         localStorage.setItem("userRole", role);
+                        console.log("Token stored in localStorage:", localStorage.getItem("jwtToken"));
                         console.log(localStorage.getItem("userRole"));
                         if (role === 'User') {
                             window.location.href = '../index.html';

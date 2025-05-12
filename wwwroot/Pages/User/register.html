@@ -27,6 +27,12 @@
             </div>
         </form>
         <div id="responseMessage"></div>
+
+        <p style="text-align: center; color: #333;">
+            Already have an account?
+            <a href="../login.html" style="color: #4CAF50; text-decoration: none; font-weight: bold;">Login here</a>
+        </p>
+
     </div>
 
     <script>
@@ -51,12 +57,12 @@
                 body: JSON.stringify(userData)
             })
                 .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to register user');
-                }
-            })
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to register user');
+                    }
+                })
                 .then(data => {
                     document.getElementById("responseMessage").innerHTML =
                         `<p style="color: green;">User registered successfully! Redirecting to login...</p>`;
@@ -64,9 +70,9 @@
                         window.location.href = '../login.html';
                     }, 800);
                 })
-            .catch(error => {
-                document.getElementById("responseMessage").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-            });
+                .catch(error => {
+                    document.getElementById("responseMessage").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                });
         });
     </script>
 </body>

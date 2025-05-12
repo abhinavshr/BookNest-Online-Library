@@ -31,19 +31,20 @@
             </div>
         </div>
         <div style="flex-direction: row; display: flex;">
-            <div class="nav-inside">
+            <div class="nav-inside" id="cartAndProfile">
                 <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
-            </div>
-            <div class="nav-inside">
                 <div class="profile-dropdown">
                     <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
                     <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
-                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
+                        <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
                         <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
-                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Settings</a>
-                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
+                        <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
                     </div>
                 </div>
+            </div>
+
+            <div class="nav-inside" id="loginButton" style="display: none;">
+                <a href="../login.html" style="color: #fff; background-color: #007bff; padding: 10px; border-radius: 5px;">Login</a>
             </div>
         </div>
     </div>
@@ -57,210 +58,18 @@
 
                 <div style="padding: 5px; display: flex; flex-direction: row; align-items: center;">
 
-                    <label for="book" style="font-family: Arial; font-size:15px;  margin-right: 5px;">Sort By:</label>
-                    <select id="book" name="book" class="styled-select">
-                        <option value="hp">Harry Potter</option>
-                        <option value="lotr">Lord of the Rings</option>
-                        <option value="got">Game of Thrones</option>
+                    <label for="sort" style="font-family: Arial; font-size:15px; margin-right: 5px;">Sort By:</label>
+                    <select id="sort" name="sort" class="styled-select">
+                        <option value="default" selected>Default</option>
+                        <option value="price-low-high">Price: Low to High</option>
+                        <option value="price-high-low">Price: High to Low</option>
                     </select>
                 </div>
 
             </div>
-            <div style="  display: flex; flex-direction: row; margin-top: 10px; justify-content: space-between; align-items: center; ">
-
-
-
-                <div class="grid-container">
-                    <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>   <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>   <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>   <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>   <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>   <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>   <div style="padding:10px">
-                        <div class="book-container">
-                            <div style="position: relative; overflow: hidden; ">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Sample Image" class="book-image">
-                                <div class="bookmark-icon">
-                                    <i class="fas fa-bookmark"></i>
-                                </div>
-                            </div>
-
-                            <div class="book-info">
-                                <label style="font-size: 17px; font-weight: bold; font-family: Arial; ">Modern Spaces</label>
-                                <label style="margin-top: 5px;font-size: 14px; font-family: Arial; ">By Francisco Spencer</label>
-                                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial; ">Rs.896</label>
-
-                                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                                    <div style="display: flex; justify-content: center; align-items:center; flex-direction: row;">
-                                        <label style="font-size: 14px; font-weight: bold; font-family: Arial; ">Add To Carts</label>
-                                        <span class="material-icons" style="color:black; margin-left:5px; font-size: 16px;">shopping_cart</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
+            <div style="width: 100%; display: flex; flex-direction: row; justify-content: center;">
+                <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: center;" id="book-list">
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -272,11 +81,125 @@
         menu.style.display = (menu.style.display === "block") ? "none" : "block";
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener("click", function (event) {
         var isClickInside = event.target.closest(".profile-dropdown");
         if (!isClickInside) {
             document.getElementById("profileMenu").style.display = "none";
         }
     });
+
+    let bookData = [];
+
+    fetch('http://localhost:5223/api/book/top-selling')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch books');
+            }
+            return response.json();
+        })
+        .then(data => {
+            bookData = data;
+            renderBookList(bookData);
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById('book-list').innerText = `Error: ${error.message}`;
+        });
+
+    function renderBookList(books) {
+        const bookList = document.getElementById('book-list');
+        bookList.innerHTML = '';
+
+        books.forEach(book => {
+            const card = document.createElement('div');
+            card.style.padding = '10px';
+            card.className = 'book-container';
+            card.innerHTML = `
+        <div style="position: relative; overflow: hidden;">
+            <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+            <div class="bookmark-icon">
+                <i class="fas fa-bookmark"></i>
+            </div>
+        </div>
+        <div class="book-info">
+            <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
+            <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
+            <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
+            <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
+                <div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
+                    <label style="font-size: 14px; font-weight: bold; font-family: Arial;">Add To Cart</label>
+                    <span class="material-icons" style="color: black; margin-left: 5px; font-size: 16px;">shopping_cart</span>
+                </div>
+            </div>
+        </div>
+    `;
+            bookList.appendChild(card);
+        });
+    }
+
+    function sortBooks() {
+        const sortValue = document.getElementById('sort').value;
+
+        let sortedBooks;
+
+        if (sortValue === 'price-low-high') {
+            sortedBooks = [...bookData].sort((a, b) => a.price - b.price);
+        } else if (sortValue === 'price-high-low') {
+            sortedBooks = [...bookData].sort((a, b) => b.price - a.price);
+        } else {
+            sortedBooks = [...bookData];
+        }
+
+        renderBookList(sortedBooks);
+    }
+
+    document.getElementById('sort').addEventListener('change', sortBooks);
+
+    function searchBooks() {
+        const searchTerm = document.querySelector('.search-customize').value.toLowerCase();
+        const filteredBooks = bookData.filter(book =>
+            book.title.toLowerCase().includes(searchTerm) ||
+            book.authorName.toLowerCase().includes(searchTerm)
+        );
+        renderBookList(filteredBooks);
+    }
+
+    document.querySelector('.search-customize').addEventListener('input', searchBooks);
+
+    function checkLoginStatus() {
+        const token = localStorage.getItem('jwtToken');
+        console.log('Token:', token);
+
+        if (token) {
+            document.getElementById('cartAndProfile').style.display = 'flex';
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('cartAndProfile').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'block';
+        }
+    }
+
+    window.onload = checkLoginStatus; 
+
+    function checkLoginStatus() {
+        const token = localStorage.getItem('jwtToken');
+        console.log('Token:', token);
+
+        if (token) {
+            document.getElementById('cartAndProfile').style.display = 'flex';
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('cartAndProfile').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'block';
+        }
+    }
+
+    window.onload = checkLoginStatus; 
+
+    function logout() {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("userRole");
+        alert("You have been logged out.");
+        window.location.href = '../login.html';
+    }
 </script>
