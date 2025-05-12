@@ -107,7 +107,7 @@ namespace First.Services
             }
             else
             {
-                Console.WriteLine($"User found: {user.Name}, Role: {user.Role}");
+                Console.WriteLine($"User found: {user.Name}, Role: {user.Role}, UserID: {user.UserId}");
             }
 
             return user;

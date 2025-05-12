@@ -7,11 +7,14 @@ namespace BookNest.Entities
     {
         [Key] public Guid CartItemId { get; set; } = Guid.NewGuid();
 
-        [ForeignKey(nameof(Cart))] public Guid CartId { get; set; }
+        [ForeignKey(nameof(Cart))] public Guid UserId { get; set; }
 
         [ForeignKey(nameof(Book))] public Guid BookId { get; set; }
 
         public int Quantity { get; set; }
+
+        public virtual User User { get; set; }
+        public virtual Book Book { get; set; }
     }
 
 }

@@ -4,8 +4,8 @@ namespace BookNest.Services.Interface
 {
     public interface ICartItemService
     {
-        void AddCartItem(InsertCartItemDto itemDto);
-        List<GetAllCartItemDto> GetItemsByCart(Guid cartId);
-        void RemoveCartItem(Guid cartItemId);
+        Task AddCartItem(InsertCartItemDto itemDto);
+        Task<List<GetAllCartItemDto>> GetItemsByCart(Guid cartId);
+        Task RemoveCartItem(Guid cartItemId);
     }
 }

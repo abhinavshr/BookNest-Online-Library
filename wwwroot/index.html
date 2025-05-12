@@ -31,21 +31,6 @@
                 <a href="Pages/User/comming_soon.html">Comming Soon</a>
             </div>
         </div>
-        <!--<div style="flex-direction: row; display: flex;">
-        <div class="nav-inside">
-            <a href="Pages/User/cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
-        </div>
-        <div class="nav-inside">
-            <div class="profile-dropdown">
-                <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
-                <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
-                    <a href="Pages/User/profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
-                    <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
-                    <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>-->
         <div style="flex-direction: row; display: flex;">
             <div class="nav-inside" id="cartAndProfile">
                 <a href="Pages/User/cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
@@ -162,6 +147,57 @@
         }
     });
 
+    //let bookData = [];
+
+    //fetch('http://localhost:5223/api/book')
+    //    .then(response => {
+    //        if (!response.ok) {
+    //            throw new Error('Failed to fetch books');
+    //        }
+    //        return response.json();
+    //    })
+    //    .then(data => {
+    //        bookData = data;
+    //        renderBookList(bookData);
+    //    })
+    //    .catch(error => {
+    //        console.error(error);
+    //        document.getElementById('book-list').innerText = 'Failed to load books.';
+    //    });
+
+    //function renderBookList(books) {
+    //    const bookList = document.getElementById('book-list');
+    //    bookList.innerHTML = '';
+
+    //    books.forEach(book => {
+    //        const card = document.createElement('div');
+    //        card.style.padding = '10px';
+    //        card.className = 'book-container';
+    //        card.innerHTML = `
+    //        <div style="position: relative; overflow: hidden;">
+    //            <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+    //            <div class="bookmark-icon">
+    //                <i class="fas fa-bookmark"></i>
+    //            </div>
+    //        </div>
+    //        <div class="book-info">
+    //            <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
+    //            <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
+    //            <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
+    //            <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
+    //               <button
+    //                     style="display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; border: none; cursor: pointer;"
+    //                     onclick="addToCart(${book.BookId})">
+    //                     <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black;">Add To Cart</label>
+    //                     <span class="material-icons" style="color: black; margin-left: 5px; font-size: 16px;">shopping_cart</span>
+    //               </button>
+    //            </div>
+    //        </div>
+    //    `;
+    //        bookList.appendChild(card);
+    //    });
+    //}
+
     let bookData = [];
 
     fetch('http://localhost:5223/api/book')
@@ -189,27 +225,28 @@
             card.style.padding = '10px';
             card.className = 'book-container';
             card.innerHTML = `
-            <div style="position: relative; overflow: hidden;">
-                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
-                <div class="bookmark-icon">
-                    <i class="fas fa-bookmark"></i>
-                </div>
+        <div style="position: relative; overflow: hidden;">
+            <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+            <div class="bookmark-icon">
+                <i class="fas fa-bookmark"></i>
             </div>
-            <div class="book-info">
-                <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
-                <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
-                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
-                <div style="margin-top: 5px; padding: 15px; border: 1px solid black;">
-                    <div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
-                        <label style="font-size: 14px; font-weight: bold; font-family: Arial;">Add To Cart</label>
-                        <span class="material-icons" style="color: black; margin-left: 5px; font-size: 16px;">shopping_cart</span>
-                    </div>
-                </div>
-            </div>
-        `;
+        </div>
+        <div class="book-info">
+            <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
+            <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
+            <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
+            <button
+                style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
+                onclick="addToCart('${book.bookId}')">
+                <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
+                <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
+            </button>
+        </div>
+    `;
             bookList.appendChild(card);
         });
     }
+
 
     function sortBooks() {
         const sortValue = document.getElementById('sort').value;
@@ -242,6 +279,8 @@
 
     function checkLoginStatus() {
         const token = localStorage.getItem('jwtToken');
+        const uid = localStorage.getItem('userID');
+        console.log('User ID:', uid);
         console.log('Token:', token);
 
         if (token) {
@@ -258,7 +297,64 @@
     function logout() {
         localStorage.removeItem("jwtToken");
         localStorage.removeItem("userRole");
+        localStorage.removeItem("userID");
         alert("You have been logged out.");
         window.location.href = 'Pages/login.html';
     }
+
+    function addToCart(bookId) {
+        console.log("Book ID:", bookId);
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token) {
+            alert("User not authenticated.");
+            return;
+        }
+
+        if (!userId) {
+            alert('You must be logged in to add items to your cart.');
+            return;
+        }
+
+        const book = bookData.find(b => b.bookId === bookId);
+
+        if (!book) {
+            alert('Book not found!');
+            return;
+        }
+
+        const cartItem = {
+            userId: userId,
+            bookId: book.bookId,
+            quantity: 1
+        };
+
+        fetch("http://localhost:5223/api/cartitem", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(cartItem)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Network response was not ok");
+                return res.json();
+            })
+            .then(json => {
+                if (json) {
+                    console.log("Success:", json);
+                    alert(json.message); 
+                } else {
+                    console.log("Success: No content returned.");
+                }
+            })
+            .catch(error => {
+                console.error("Error adding to cart:", error);
+                alert("Failed to add item to cart");
+            });
+    }
+
+
 </script>

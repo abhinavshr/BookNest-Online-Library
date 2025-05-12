@@ -171,11 +171,12 @@ namespace BookNest.Services
 
         public async Task<List<GetAllBookDto>> GetBooksPublishedInLastMonth()
         {
-            var oneMonthAgo = DateTime.UtcNow.AddMonths(-1);
+            var today = DateTime.UtcNow.Date;
+            var oneMonthAgo = today.AddMonths(-1);
 
             return await _context.Books
                 .Include(book => book.Author)
-                .Where(book => book.PublicationDate >= oneMonthAgo)
+                .Where(book => book.PublicationDate >= oneMonthAgo && book.PublicationDate <= today)
                 .Select(book => new GetAllBookDto
                 {
                     BookId = book.BookId,
@@ -185,15 +186,15 @@ namespace BookNest.Services
                 })
                 .ToListAsync();
         }
-
 
         public async Task<List<GetAllBookDto>> GetBooksPublishedInLastWeek()
         {
-            var lastWeek = DateTime.UtcNow.AddDays(-7);
+            var today = DateTime.UtcNow.Date;
+            var lastWeek = today.AddDays(-7);
 
             return await _context.Books
                 .Include(book => book.Author)
-                .Where(book => book.PublicationDate >= lastWeek)
+                .Where(book => book.PublicationDate >= lastWeek && book.PublicationDate <= today)
                 .Select(book => new GetAllBookDto
                 {
                     BookId = book.BookId,
@@ -203,6 +204,7 @@ namespace BookNest.Services
                 })
                 .ToListAsync();
         }
+
 
         public async Task<List<GetAllBookDto>> GetComingSoonBooks()
         {
