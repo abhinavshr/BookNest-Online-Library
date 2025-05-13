@@ -4,8 +4,8 @@ namespace BookNest.Services.Interface
 {
     public interface IBookmarkService
     {
-        void AddBookmark(InsertBookmarkDto bookmarkDto);
-        List<GetAllBookmarkDto> GetBookmarksByUser(Guid userId);
-        void DeleteBookmark(Guid id);
+        Task AddBookmark(InsertBookmarkDto bookmarkDto);
+        Task<List<GetAllBookmarkDto>> GetBookmarksByUser(Guid userId);
+        Task DeleteBookmark(Guid id);
     }
 }
