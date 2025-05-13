@@ -22,5 +22,7 @@ namespace BookNest.Entities
         public int OrderCount { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public ICollection<Review> Reviews { get; set; }
     }
 }

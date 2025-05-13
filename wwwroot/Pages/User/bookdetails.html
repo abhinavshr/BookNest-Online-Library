@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Book Details</title>
+    <link rel="stylesheet" href="../../css/award_winner.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="../../index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside" id="cartAndProfile">
+                <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
+                        <a href="bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-inside" id="loginButton" style="display: none;">
+                <a href="../login.html" style="color: #fff; background-color: #007bff; padding: 10px; border-radius: 5px;">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-section" style="padding: 30px; background-color: #ffffff; max-width: 900px; margin: 40px auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div id="book-details" style="width: 100%; text-align: left;">
+                <h2>Loading Book Details...</h2>
+            </div>
+
+            <div id="reviews-section" style="width: 100%; margin-top: 40px;">
+                <h3 style="margin-bottom: 20px;">Reviews</h3>
+                <div id="existing-reviews" style="margin-bottom: 30px;"></div>
+
+                <div id="add-review-section" style="margin-top: 20px;">
+                    <h4>Add Your Review</h4>
+                    <form id="add-review-form" style="display: flex; flex-direction: column; gap: 10px;">
+                        <label for="rating">Rating (1 to 5):</label>
+                        <input type="number" id="rating" name="rating" min="1" max="5" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+
+                        <label for="review-text">Review:</label>
+                        <textarea id="review-text" name="review-text" rows="4" cols="50" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+
+                        <button type="submit" style="padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px;">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bookId = new URLSearchParams(window.location.search).get('bookId');
+        console.log("BookId:", bookId);
+
+        if (!bookId) {
+            document.getElementById('book-details').innerText = 'No Book ID provided.';
+        } else {
+            fetchBookDetails(bookId);
+            fetchBookReviews(bookId);
+        }
+
+        let bookData = [];
+
+        function fetchBookDetails(bookId) {
+            fetch(`http://localhost:5223/api/book/details/${bookId}`)
+                .then(response => response.json())
+                .then(book => {
+                    bookData = [book];
+                    displayBookDetails(book);
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.getElementById('book-details').innerHTML = '<h2>Failed to load book details</h2>';
+                });
+        }
+
+        function displayBookDetails(book) {
+            const bookDetailsSection = document.getElementById('book-details');
+            bookDetailsSection.innerHTML = `
+                    <h2>${book.title}</h2>
+                    <p><strong>Author:</strong> ${book.author?.name || 'N/A'}</p>
+                    <p><strong>Author Biography:</strong> ${book.author?.biography || 'N/A'}</p>
+
+                    <p><strong>Publisher:</strong> ${book.publisher?.name || 'N/A'}</p>
+                    <p><strong>Publisher Description:</strong> ${book.publisher?.description || 'N/A'}</p>
+
+                    <p><strong>Genre:</strong> ${book.genre?.name || 'N/A'}</p>
+                    <p><strong>Genre Description:</strong> ${book.genre?.description || 'N/A'}</p>
+
+                    <p><strong>Language:</strong> ${book.language || 'N/A'}</p>
+                    <p><strong>Description:</strong> ${book.description || 'N/A'}</p>
+
+                    <p><strong>Price:</strong> Rs.${book.price}</p>
+                    <p><strong>Rating:</strong> ${book.rating}</p>
+                    <p><strong>Stock:</strong> ${book.stock}</p>
+                    <p><strong>Available in Store:</strong> ${book.physicalAvailability ? 'Yes' : 'No'}</p>
+
+                    <p><strong>Awards:</strong> ${book.awardWinners || 'None'}</p>
+                    <p><strong>Publication Date:</strong> ${new Date(book.publicationDate).toLocaleDateString()}</p>
+
+                    <div style="margin-top: 20px;">
+                        <button onclick="addToCart('${book.bookId}')" style="padding: 10px 15px; margin-right: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Add to Cart</button>
+                    </div>
+                `;
+        }
+
+        function fetchBookReviews(bookId) {
+            fetch(`http://localhost:5223/api/reviews/book/${bookId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(reviews => {
+                    displayReviews(reviews);
+                })
+                .catch(error => {
+                    console.error("Error fetching reviews:", error);
+                    document.getElementById('existing-reviews').innerHTML = '<p>Failed to load reviews.</p>';
+                });
+        }
+
+        function displayReviews(reviews) {
+            const reviewsSection = document.getElementById('existing-reviews');
+            reviewsSection.innerHTML = '';
+
+            if (reviews.length > 0) {
+                reviews.forEach(review => {
+                    reviewsSection.innerHTML += `
+                <div class="review" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; background-color: #f8f8f8; margin-bottom: 15px;">
+                    <p><strong>Rating:</strong> ${review.rating}</p>
+                    <p><strong>Review:</strong> ${review.comment}</p>
+                    <p><strong>By:</strong> ${review.userName}</p>
+                </div>
+            `;
+                });
+            } else {
+                reviewsSection.innerHTML = '<p>No reviews yet.</p>';
+            }
+        }
+
+        document.getElementById('add-review-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const rating = document.getElementById('rating').value;
+            const reviewText = document.getElementById('review-text').value;
+            const token = localStorage.getItem('jwtToken');
+            const userId = localStorage.getItem('userID');
+
+            if (!token || !userId) {
+                alert("You must be logged in to add a review.");
+                window.location.href = '../login.html';
+                return;
+            }
+
+            if (!userId) {
+                alert("User ID is missing. Please make sure you are logged in.");
+                return;
+            }
+
+
+            const newReview = {
+                userId: userId,
+                bookId: bookId,
+                rating: parseFloat(rating),
+                comment: reviewText
+            };
+
+            fetch('http://localhost:5223/api/reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(newReview)
+            })
+                .then(async response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const text = await response.text();
+                    const data = text ? JSON.parse(text) : {};
+                    alert('Review added successfully!');
+                    window.location.reload();
+                    fetchBookReviews(bookId);
+                })
+                .catch(error => {
+                    console.error('Error adding review:', error);
+                    alert('Failed to add review.');
+                });
+
+        });
+
+        function addToCart(bookId) {
+            console.log("Book ID:", bookId);
+            const token = localStorage.getItem('jwtToken');
+            const userId = localStorage.getItem('userID');
+
+            if (!token) {
+                alert('You must be logged in to add items to your cart.');
+                setTimeout(() => {
+                    window.location.href = 'Pages/login.html';
+                }, 100);
+                return;
+            }
+
+            if (!userId) {
+                alert('You must be logged in to add items to your cart.');
+                return;
+            }
+
+            const cartItem = {
+                userId: userId,
+                bookId: bookId,
+                quantity: 1
+            };
+
+            fetch("http://localhost:5223/api/cartitem", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(cartItem)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Network response was not ok");
+                    return res.json();
+                })
+                .then(json => {
+                    if (json) {
+                        console.log("Success:", json);
+                        alert(json.message || "Book added to cart successfully.");
+                    } else {
+                        console.log("Success: No content returned.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error adding to cart:", error);
+                    alert("Failed to add item to cart");
+                });
+        }
+
+
+        function logout() {
+            localStorage.removeItem("jwtToken");
+            localStorage.removeItem("userRole");
+            alert("You have been logged out.");
+            window.location.href = '../login.html';
+        }
+
+        function checkLoginStatus() {
+            const token = localStorage.getItem('jwtToken');
+            if (token) {
+                document.getElementById('cartAndProfile').style.display = 'flex';
+                document.getElementById('loginButton').style.display = 'none';
+            } else {
+                document.getElementById('cartAndProfile').style.display = 'none';
+                document.getElementById('loginButton').style.display = 'block';
+            }
+        }
+
+        window.onload = checkLoginStatus;
+    </script>
+
+</body>
+</html>

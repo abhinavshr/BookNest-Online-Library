@@ -282,5 +282,49 @@ namespace BookNest.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<GetAllBookDto> GetBookById(Guid id)
+        {
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Publisher)
+                .Include(b => b.Genre)
+                .FirstOrDefaultAsync(b => b.BookId == id);
+
+            if (book == null)
+                return null;
+
+            return new GetAllBookDto
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                ISBN = book.ISBN,
+                Author = new GetAllAuthorDto
+                {
+                    AuthorId = book.Author.AuthorId,
+                    Name = book.Author.Name,
+                    Biography = book.Author.Biography
+                },
+                Publisher = new GetAllPublisherDto
+                {
+                    PublisherId = book.Publisher.PublisherId,
+                    Name = book.Publisher.Name,
+                    Description = book.Publisher.Description
+                },
+                Genre = new GetAllGenreDto
+                {
+                    GenreId = book.Genre.GenreId,
+                    Name = book.Genre.Name,
+                    Description = book.Genre.Description
+                },
+                Language = book.Language,
+                Description = book.Description,
+                Price = book.Price,
+                Rating = book.Rating,
+                Stock = book.Stock,
+                PhysicalAvailability = book.PhysicalAvailability,
+                AwardWinners = book.AwardWinners,
+                PublicationDate = book.PublicationDate
+            };
+        }
     }
 }

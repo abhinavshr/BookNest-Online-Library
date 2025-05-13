@@ -372,7 +372,9 @@
 
             card.innerHTML = `
             <div style="position: relative; overflow: hidden;">
-                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+                <a href="Pages/User/bookdetails.html?bookId=${book.bookId}">
+                    <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+                </a>
                 <button class="bookmark-icon" style="border: none; background: none;" onclick="bookmarkBook('${book.bookId}')">
                     <i class="${bookmarkIconClass}" style="color: ${bookmarkIconColor}; font-size: 24px;"></i>
                 </button>

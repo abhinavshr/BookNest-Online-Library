@@ -7,6 +7,7 @@ namespace BookNest.Services.Interface
         Task AddBook(InsertBookDto bookDto);
         Task<List<GetAllBookDto>> GetAllBooks();
         Task<GetAllBookDto> GetById(Guid id);
+        Task<GetAllBookDto> GetBookById(Guid id);
         Task UpdateBook(Guid id, UpdateBookDto bookDto);
         Task DeleteBook(Guid id);
         Task<GetAllBookDto> GetTopSellingBook();
