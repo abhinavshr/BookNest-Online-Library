@@ -52,10 +52,9 @@ namespace BookNest.Services
             }
         }
 
-
         public async Task<List<GetAllAnnouncementDto>> GetActiveAnnouncements()
         {
-            var currentDate = DateTime.UtcNow; // Use UTC time for consistency
+            var currentDate = DateTime.UtcNow;
 
             var activeAnnouncements = await _context.Announcements
                 .Where(a => a.StartDate <= currentDate && a.EndDate >= currentDate)
@@ -71,7 +70,6 @@ namespace BookNest.Services
 
             return activeAnnouncements;
         }
-
 
     }
 }
