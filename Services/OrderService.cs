@@ -4,6 +4,7 @@ using BookNest.Dtos;
 using BookNest.Entities;
 using BookNest.Services.Interface;
 using First.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookNest.Services
@@ -86,5 +87,40 @@ namespace BookNest.Services
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
         }
+
+        public async Task UpdateOrderAsync(Order order)
+        {
+            _context.Orders.Update(order); 
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<ActionResult> CheckClaimCodeAsync(CheckClaimCodeDto checkClaimCodeDto)
+        {
+            var order = await GetOrderByIdAsync(checkClaimCodeDto.OrderId);
+
+            if (order == null)
+            {
+                return new NotFoundObjectResult("Order not found.");
+            }
+
+            if (int.TryParse(checkClaimCodeDto.ClaimCode, out int claimCodeParsed))
+            {
+                if (order.ClaimCode == claimCodeParsed)
+                {
+                    order.OrderStatus = "Completed";
+                    await UpdateOrderAsync(order);
+                    return new OkObjectResult("Order status updated to 'Completed'.");
+                }
+                else
+                {
+                    return new BadRequestObjectResult("Invalid claim code.");
+                }
+            }
+            else
+            {
+                return new BadRequestObjectResult("Claim code is not a valid integer.");
+            }
+        }
+
     }
 }

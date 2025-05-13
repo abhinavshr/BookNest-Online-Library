@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BookNest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8ba817c30e5671ee564bc60b6604908c75d8205")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+925dbb8d9b4366c2e74c819f7bb25d263eac04b1")]
 [assembly: System.Reflection.AssemblyProductAttribute("BookNest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BookNest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
