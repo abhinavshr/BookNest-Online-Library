@@ -8,5 +8,7 @@ namespace BookNest.Services.Interface
         Task<List<GetAllCartItemDto>> GetAllCartItems();
         Task RemoveCartItem(Guid cartItemId);
         Task<List<GetAllCartItemDto>> GetCartItemsByUser(Guid userId);
+        Task RemoveAllCartItemsByUser(Guid userId);
     }
 }
+     

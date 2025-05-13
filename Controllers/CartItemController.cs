@@ -88,6 +88,12 @@ namespace BookNest.Controllers
             }
         }
 
+        [HttpDelete("user/{userId}")]
+        public async Task<IActionResult> RemoveAllCartItemsByUser(Guid userId)
+        {
+            await _cartItemService.RemoveAllCartItemsByUser(userId);
+            return NoContent();
+        }
 
     }
 }

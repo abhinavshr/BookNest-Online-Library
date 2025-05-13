@@ -79,5 +79,15 @@ namespace BookNest.Services
             return cartItemDtos;
         }
 
+        public async Task RemoveAllCartItemsByUser(Guid userId)
+        {
+            var cartItems = await _context.CartItems
+                                          .Where(ci => ci.UserId == userId)
+                                          .ToListAsync();
+
+            _context.CartItems.RemoveRange(cartItems);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
