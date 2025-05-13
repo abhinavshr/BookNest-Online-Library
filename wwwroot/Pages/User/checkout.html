@@ -256,6 +256,11 @@
                 }
 
                 const order = await response.json();
+
+                await fetch(`http://localhost:5223/api/cartitem/user/${userId}`, {
+                    method: 'DELETE'
+                });
+
                 alert(`Order placed successfully! Your ClaimCode is ${order.claimCode}`);
                 window.location.href = `../../index.html`;
 
@@ -266,6 +271,7 @@
                 button.innerText = "Place Order";
             }
         }
+
 
         function calculateSubTotal(items) {
             return items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
