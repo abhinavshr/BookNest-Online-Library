@@ -28,6 +28,7 @@
     </div>
 
     <script>
+        debugger;
         document.getElementById("loginForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
@@ -53,9 +54,13 @@
                         const token = data.token;
                         const role = data.role;
                         const uid = data.userID;
+                        const userName = data.name;
+                        const userEmail = data.email;
                         localStorage.setItem("jwtToken", token);
                         localStorage.setItem("userRole", role);
                         localStorage.setItem("userID", uid);
+                        localStorage.setItem("UserName", userName);
+                        localStorage.setItem("UserEmail", userEmail);
                         console.log("Token stored in localStorage:", localStorage.getItem("jwtToken"));
                         console.log(localStorage.getItem("userRole"));
                         if (role === 'User') {

@@ -92,7 +92,7 @@ namespace BookNest.Controllers
                 {
                     var userDto = MapUserToUserDto(user);
                     var token = GenerateJwtToken(userDto);
-                    return Ok(new { message = "Login successful.", token = token, role = user.Role, UserID = user.UserId });
+                    return Ok(new { message = "Login successful.", token = token, role = user.Role, UserID = user.UserId, name = user.Name, email = user.Email});
                 }
 
                 return Unauthorized(new { error = "Invalid credentials." });
