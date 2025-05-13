@@ -23,6 +23,57 @@
 
     <div id="content">
         <h1>Welcome to the Admin Dashboard</h1>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <p>Total Users</p>
+                <h2 id="userCount"></h2>
+            </div>
+            <div class="stat-box">
+                <p>Total Books Uploaded</p>
+                <h2 id="bookUploaded"></h2>
+            </div>
+            <div class="stat-box">
+                <p>Total Staff</p>
+                <h2 id="staffCount"></h2>
+            </div>
+        </div>
+
+        <div class="engagement-container">
+            <h3>User Engagements</h3>
+            <div class="bar-chart">
+                <div style="height: 60%" title="Jan">Jan</div>
+                <div style="height: 35%" title="Feb">Feb</div>
+                <div style="height: 50%" title="Mar">Mar</div>
+                <div style="height: 65%" title="Apr">Apr</div>
+                <div style="height: 45%" title="May">May</div>
+                <div style="height: 60%" title="Jun">Jun</div>
+                <div style="height: 30%" title="Jul">Jul</div>
+                <div style="height: 15%" title="Aug">Aug</div>
+                <div style="height: 10%" title="Sep">Sep</div>
+                <div style="height: 30%" title="Oct">Oct</div>
+                <div style="height: 45%" title="Nov">Nov</div>
+                <div style="height: 70%" title="Dec">Dec</div>
+            </div>
+        </div>
+
+        <div class="top-books">
+            <h3>Last Orders</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Order ID</th>
+                        <th>User ID</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orderBody">
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <script>
@@ -52,6 +103,109 @@
             alert("You have been logged out.");
             window.location.href = '../login.html';
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("http://localhost:5223/api/users") 
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(users => {
+                    document.getElementById("userCount").textContent = users.length.toLocaleString();
+                })
+                .catch(error => {
+                    console.error("Failed to load user count:", error);
+                    document.getElementById("userCount").textContent = "Error";
+                });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("jwtToken");
+
+            fetch("http://localhost:5223/api/users/staff", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("staffCount").textContent = data.length;
+                })
+                .catch(error => {
+                    console.error("Failed to load staff count:", error);
+                    document.getElementById("staffCount").textContent = "Error";
+                });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("jwtToken");
+
+            fetch("http://localhost:5223/api/book", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("bookUploaded").textContent = data.length;
+                })
+                .catch(error => {
+                    console.error("Failed to load book count:", error);
+                    document.getElementById("bookUploaded").textContent = "Error";
+                });
+        });
+
+        let currentOrderId = null;
+
+        async function loadOrders() {
+            try {
+                const response = await fetch("http://localhost:5223/api/orders");
+                const orders = await response.json();
+
+                const orderBody = document.getElementById("orderBody");
+                orderBody.innerHTML = "";
+
+
+                const recentOrders = orders.slice(-5).reverse(); 
+
+                recentOrders.forEach((order, index) => {
+                    const isPending = (order.orderStatus?.toLowerCase() === 'pending');
+                    const buttonClass = isPending ? 'status-btn clickable' : 'status-btn disabled';
+                    const buttonHtml = isPending
+                        ? `<button class="${buttonClass}" onclick="openClaimModal('${order.orderId}')">${order.orderStatus}</button>`
+                        : `<button class="${buttonClass}" disabled>${order.orderStatus || 'N/A'}</button>`;
+
+                    const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${order.orderId}</td>
+                        <td>${order.userId}</td>
+                        <td>Rs. ${order.totalAmount.toFixed(2)}</td>
+                        <td>${buttonHtml}</td>
+                    </tr>
+                `;
+                    orderBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("Error loading orders:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadOrders);
     </script>
 </body>
 </html>
