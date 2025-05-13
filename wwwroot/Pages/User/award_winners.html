@@ -37,7 +37,7 @@
                     <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
                     <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
                         <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
-                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
                         <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
                     </div>
                 </div>
@@ -109,30 +109,38 @@
     function renderBookList(books) {
         const bookList = document.getElementById('book-list');
         bookList.innerHTML = '';
+        console.log(userBookmarks);
+
 
         books.forEach(book => {
             const card = document.createElement('div');
             card.style.padding = '10px';
             card.className = 'book-container';
+
+            const isBookmarked = userBookmarks.includes(book.bookId);
+            console.log(`Book ID: ${book.bookId}, Is Bookmarked: ${isBookmarked}`);
+            const bookmarkIconClass = isBookmarked ? 'fas fa-bookmark' : 'far fa-bookmark';
+            const bookmarkIconColor = isBookmarked ? 'red' : 'white';
+
             card.innerHTML = `
-         <div style="position: relative; overflow: hidden;">
-             <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
-             <div class="bookmark-icon">
-                 <i class="fas fa-bookmark"></i>
-             </div>
-         </div>
-         <div class="book-info">
-             <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
-             <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
-             <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
-             <button
-                style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
-                onclick="addToCart('${book.bookId}')">
-                <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
-                <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
-            </button>
-         </div>
-     `;
+     <div style="position: relative; overflow: hidden;">
+         <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+         <button class="bookmark-icon" style="border: none; background: none;" onclick="bookmarkBook('${book.bookId}')">
+             <i class="${bookmarkIconClass}" style="color: ${bookmarkIconColor}; font-size: 24px;"></i>
+         </button>
+     </div>
+     <div class="book-info">
+         <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
+         <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
+         <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
+         <button
+             style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
+             onclick="addToCart('${book.bookId}')">
+             <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
+             <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
+         </button>
+     </div>
+ `;
             bookList.appendChild(card);
         });
     }
@@ -241,5 +249,80 @@
                 alert("Failed to add item to cart");
             });
     }
+
+    function bookmarkBook(bookId) {
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token || !userId) {
+            alert("You must be logged in to bookmark a book.");
+            return;
+        }
+
+        const book = bookData.find(b => b.bookId === bookId);
+        if (!book) {
+            alert("Book not found.");
+            return;
+        }
+
+        const bookmark = {
+            userId: userId,
+            bookId: book.bookId
+        };
+
+        fetch('http://localhost:5223/api/bookmarks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(bookmark)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to bookmark the book.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Book bookmarked successfully!');
+                loadUserBookmarks();
+            })
+            .catch(error => {
+                console.error(error);
+                alert('An error occurred while bookmarking the book.');
+            });
+    }
+
+    let userBookmarks = [];
+
+    function loadUserBookmarks() {
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token || !userId) {
+            console.warn('No token or userId found in localStorage');
+            return;
+        }
+
+        fetch(`http://localhost:5223/api/bookmarks/user/${userId}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                userBookmarks = data.map(b => b.bookId);
+                renderBookList(bookData);
+            })
+            .catch(err => {
+                console.error("Failed to load bookmarks", err);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadUserBookmarks();
+    });
 </script>
 
