@@ -35,9 +35,13 @@ namespace BookNest.Controllers
         }
 
 
+        [HttpGet]
         public async Task<ActionResult<List<Order>>> GetAllOrders()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .ToListAsync();
+
             return Ok(orders);
         }
 
@@ -49,6 +53,35 @@ namespace BookNest.Controllers
                 return NotFound();
 
             return Ok(order);
+        }
+
+        [HttpPost("check-claim-code")]
+        public async Task<ActionResult> CheckClaimCodeAsync([FromBody] CheckClaimCodeDto checkClaimCodeDto)
+        {
+            var order = await _orderService.GetOrderByIdAsync(checkClaimCodeDto.OrderId);
+
+            if (order == null)
+            {
+                return NotFound(new { message = "Order not found." });
+            }
+
+            if (int.TryParse(checkClaimCodeDto.ClaimCode, out int claimCodeParsed))
+            {
+                if (order.ClaimCode == claimCodeParsed)
+                {
+                    order.OrderStatus = "Completed";
+                    await _orderService.UpdateOrderAsync(order);
+                    return Ok(new { message = "Order status updated to 'Completed'." });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Invalid claim code." });
+                }
+            }
+            else
+            {
+                return BadRequest(new { message = "Claim code is not a valid integer." });
+            }
         }
     }
 }
