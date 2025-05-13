@@ -195,42 +195,54 @@
         loadCartItems();
 
         async function placeOrder() {
-            const cardNumber = document.getElementById("cardNumber").value;
-            const expiryDate = document.getElementById("expiryDate").value;
-            const cvv = document.getElementById("cvv").value;
-
-            if (!cardNumber || !expiryDate || !cvv) {
-                alert("Please fill in all payment details.");
-                return;
-            }
-
-            const userId = localStorage.getItem('userID');
-            if (!userId) {
-                alert("User is not logged in.");
-                return;
-            }
-
-            const items = await fetchCartItems();
-
-            const orderData = {
-                userId: userId,
-                discountApplied: 0,
-                orderDate: new Date().toISOString(),
-                taxAmount: calculateTax(items),
-                subTotal: calculateSubTotal(items),
-                totalAmount: calculateTotalAmount(items),
-                payment: "CreditCard",
-                orderStatus: "Pending",
-                claimCode: null,
-                cardNumber: cardNumber,
-                items: items.map(item => ({
-                    bookId: item.bookId,
-                    quantity: 1,
-                    discount: item.discount || 0
-                }))
-            };
+            const button = document.querySelector(".continue-btn");
+            button.disabled = true;
+            button.innerText = "Placing Order...";
 
             try {
+                const cardNumber = document.getElementById("cardNumber").value;
+                const expiryDate = document.getElementById("expiryDate").value;
+                const cvv = document.getElementById("cvv").value;
+
+                if (!cardNumber || !expiryDate || !cvv) {
+                    alert("Please fill in all payment details.");
+                    button.disabled = false;
+                    button.innerText = "Place Order";
+                    return;
+                }
+
+                const userName = localStorage.getItem("UserName");
+                const userEmail = localStorage.getItem("UserEmail");
+                const userId = localStorage.getItem('userID');
+                if (!userId) {
+                    alert("User is not logged in.");
+                    button.disabled = false;
+                    button.innerText = "Place Order";
+                    return;
+                }
+
+                const items = await fetchCartItems();
+
+                const orderData = {
+                    userId: userId,
+                    userName: userName,
+                    userEmail: userEmail,
+                    discountApplied: 0,
+                    orderDate: new Date().toISOString(),
+                    taxAmount: calculateTax(items),
+                    subTotal: calculateSubTotal(items),
+                    totalAmount: calculateTotalAmount(items),
+                    payment: "CreditCard",
+                    orderStatus: "Pending",
+                    claimCode: null,
+                    cardNumber: cardNumber,
+                    items: items.map(item => ({
+                        bookId: item.bookId,
+                        quantity: 1,
+                        discount: item.discount || 0
+                    }))
+                };
+
                 const response = await fetch('http://localhost:5223/api/orders', {
                     method: 'POST',
                     headers: {
@@ -246,9 +258,12 @@
                 const order = await response.json();
                 alert(`Order placed successfully! Your ClaimCode is ${order.claimCode}`);
                 window.location.href = `../../index.html`;
+
             } catch (error) {
                 console.error('Error placing order:', error);
                 alert("Failed to place order. Please try again later.");
+                button.disabled = false;
+                button.innerText = "Place Order";
             }
         }
 
@@ -271,6 +286,7 @@
             }
             return await response.json();
         }
+
     </script>
 </body>
 </html>

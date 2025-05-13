@@ -280,6 +280,10 @@
     function checkLoginStatus() {
         const token = localStorage.getItem('jwtToken');
         const uid = localStorage.getItem('userID');
+        const userName = localStorage.getItem("UserName");
+        const userEmail = localStorage.getItem("UserEmail");
+        console.log('User Name:', userName);
+        console.log('User Email:', userEmail);
         console.log('User ID:', uid);
         console.log('Token:', token);
 
@@ -298,6 +302,8 @@
         localStorage.removeItem("jwtToken");
         localStorage.removeItem("userRole");
         localStorage.removeItem("userID");
+        localStorage.removeItem("UserEmail");
+        localStorage.removeItem("UserEmail");
         alert("You have been logged out.");
         window.location.href = 'Pages/login.html';
     }

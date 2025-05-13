@@ -17,5 +17,8 @@ namespace BookNest.Dtos
         public int? ClaimCode { get; set; }
 
         public List<InsertOrderItemDto> Items { get; set; } = new();
+
+        public string UserName { get; set; } 
+        public string UserEmail { get; set; }
     }
 }
