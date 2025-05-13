@@ -207,5 +207,16 @@ namespace BookNest.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> GetBookById(Guid id)
+        {
+            var book = await _bookService.GetBookById(id);
+            if (book == null)
+                return NotFound();
+
+            return Ok(book);
+        }
+
     }
 }

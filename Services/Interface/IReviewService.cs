@@ -4,7 +4,7 @@ namespace BookNest.Services.Interface
 {
     public interface IReviewService
     {
-        void AddReview(InsertReviewDto reviewDto);
-        List<GetAllReviewDto> GetReviewsForBook(Guid bookId);
+        Task AddReview(InsertReviewDto reviewDto);
+        Task<List<GetAllReviewDto>> GetReviewsForBook(Guid bookId);
     }
 }

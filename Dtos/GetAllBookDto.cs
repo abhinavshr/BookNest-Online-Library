@@ -23,5 +23,11 @@ namespace BookNest.Dtos
         public string AuthorName { get; set; }
         public int SoldCount { get; set; }
 
+        public GetAllAuthorDto Author { get; set; }
+        public GetAllPublisherDto Publisher { get; set; }
+        public GetAllGenreDto Genre { get; set; }
+        public string PublisherName { get; set; }
+        public string GenreName { get; set; }
+
     }
 }
