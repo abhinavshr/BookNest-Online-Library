@@ -138,29 +138,29 @@ namespace First.Services
             {
                 var users = await _context.Users
                     .Where(u => u.IsActive)
+                    .Select(u => new GetAllUserDto
+                    {
+                        Name = u.Name,
+                        Email = u.Email,
+                        Role = u.Role,
+                        MembershipID = u.MembershipID,
+                        RegistrationDate = u.RegistrationDate,
+                        OrderCount = u.OrderCount,
+                        IsActive = u.IsActive
+                    })
                     .ToListAsync();
 
-                if (users == null || !users.Any())
+                if (users == null || users.Count == 0)
                     throw new Exception("No active users found");
 
-                var result = users.Select(u => new GetAllUserDto
-                {
-                    Name = u.Name,
-                    Email = u.Email,
-                    Role = u.Role,
-                    MembershipID = u.MembershipID,
-                    RegistrationDate = u.RegistrationDate,
-                    OrderCount = u.OrderCount,
-                    IsActive = u.IsActive
-                }).ToList();
-
-                return result;
+                return users;
             }
             catch (Exception ex)
             {
                 throw new Exception("Error retrieving users: " + ex.Message);
             }
         }
+
 
         public async Task<List<GetAllUserDto>> GetAllStaff()
         {
