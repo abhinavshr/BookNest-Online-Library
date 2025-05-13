@@ -117,33 +117,28 @@ namespace BookNest.Services
 
         public async Task<GetAllBookDto> GetTopSellingBook()
         {
-            var topSelling = await _context.OrderItems
+            var topSellingBook = await _context.OrderItems
                 .GroupBy(oi => oi.BookId)
+                .OrderByDescending(g => g.Sum(oi => oi.Quantity))
                 .Select(g => new
                 {
                     BookId = g.Key,
                     SoldCount = g.Sum(oi => oi.Quantity)
                 })
-                .OrderByDescending(g => g.SoldCount)
+                .Join(_context.Books.Include(b => b.Author),
+                    grouped => grouped.BookId,
+                    book => book.BookId,
+                    (grouped, book) => new GetAllBookDto
+                    {
+                        BookId = book.BookId,
+                        Title = book.Title,
+                        Price = book.Price,
+                        AuthorName = book.Author.Name,
+                        SoldCount = grouped.SoldCount
+                    })
                 .FirstOrDefaultAsync();
 
-            if (topSelling == null)
-                return null;
-
-            var book = await _context.Books
-                .Include(b => b.Author)
-                .Where(b => b.BookId == topSelling.BookId)
-                .Select(book => new GetAllBookDto
-                {
-                    BookId = book.BookId,
-                    Title = book.Title,
-                    Price = book.Price,
-                    AuthorName = book.Author.Name,
-                    SoldCount = topSelling.SoldCount
-                })
-                .FirstOrDefaultAsync();
-
-            return book;
+            return topSellingBook;
         }
 
         public async Task<List<GetAllBookDto>> GetBooksWithAwards()

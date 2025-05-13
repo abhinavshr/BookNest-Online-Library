@@ -203,12 +203,18 @@
         const userId = localStorage.getItem('userID');
 
         if (!token) {
-            alert("User not authenticated.");
+            alert('You must be logged in to add items to your cart.');
+            setTimeout(() => {
+                window.location.href = '../login.html';
+            }, 100);
             return;
         }
 
         if (!userId) {
             alert('You must be logged in to add items to your cart.');
+            setTimeout(() => {
+                window.location.href = '../login.html';
+            }, 100);
             return;
         }
 
@@ -257,6 +263,9 @@
 
         if (!token || !userId) {
             alert("You must be logged in to bookmark a book.");
+            setTimeout(() => {
+                window.location.href = 'Pages/login.html';
+            }, 100);
             return;
         }
 
