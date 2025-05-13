@@ -11,249 +11,289 @@
 <body>
     <div class="navigation-box">
         <div style="flex-direction: row; display: flex;">
-            <div class="nav-inside">
-                <a href="../../index.html">Home</a>
-            </div>
-            <div class="nav-inside">
-                <a href="best_seller.html" class="active">Best Seller</a>
-            </div>
-            <div class="nav-inside">
-                <a href="award_winners.html">Award Winners</a>
-            </div>
-            <div class="nav-inside">
-                <a href="new_releases.html">New Releases</a>
-            </div>
-            <div class="nav-inside">
-                <a href="new_arrivals.html">New Arrivals</a>
-            </div>
-            <div class="nav-inside">
-                <a href="comming_soon.html">Comming Soon</a>
-            </div>
+            <div class="nav-inside"><a href="../../index.html">Home</a></div>
+            <div class="nav-inside"><a href="best_seller.html" class="active">Best Seller</a></div>
+            <div class="nav-inside"><a href="award_winners.html">Award Winners</a></div>
+            <div class="nav-inside"><a href="new_releases.html">New Releases</a></div>
+            <div class="nav-inside"><a href="new_arrivals.html">New Arrivals</a></div>
+            <div class="nav-inside"><a href="comming_soon.html">Comming Soon</a></div>
         </div>
         <div style="flex-direction: row; display: flex;">
             <div class="nav-inside" id="cartAndProfile">
                 <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
                 <div class="profile-dropdown">
                     <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
-                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                    <div class="dropdown-content" id="profileMenu">
                         <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
                         <a href="bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
                         <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
                     </div>
                 </div>
             </div>
-
             <div class="nav-inside" id="loginButton" style="display: none;">
                 <a href="../login.html" style="color: #fff; background-color: #007bff; padding: 10px; border-radius: 5px;">Login</a>
             </div>
         </div>
     </div>
+
     <div class="main-section">
-        <div style="display: flex;  flex-direction: column;  justify-content: center; align-items: center">
-            <div style=" width: 100%; display: flex; justify-content: space-between; align-items: center; ">
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
                 <div class="search-bar">
                     <input class="search-customize" type="search" placeholder="Search..." />
                 </div>
-
-
-                <div style="padding: 5px; display: flex; flex-direction: row; align-items: center;">
-
-                    <label for="sort" style="font-family: Arial; font-size:15px; margin-right: 5px;">Sort By:</label>
+                <div style="padding: 5px; display: flex; align-items: center;">
+                    <label for="sort">Sort By:</label>
                     <select id="sort" name="sort" class="styled-select">
                         <option value="default" selected>Default</option>
                         <option value="price-low-high">Price: Low to High</option>
                         <option value="price-high-low">Price: High to Low</option>
                     </select>
                 </div>
-
             </div>
-            <div style="width: 100%; display: flex; flex-direction: row; justify-content: center;">
-                <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: center;" id="book-list">
-                </div>
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <div class="grid-container" id="book-list" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
             </div>
         </div>
     </div>
-</body>
-</html>
-<script>
-    function toggleDropdown() {
-        var menu = document.getElementById("profileMenu");
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-    }
 
-    document.addEventListener("click", function (event) {
-        var isClickInside = event.target.closest(".profile-dropdown");
-        if (!isClickInside) {
-            document.getElementById("profileMenu").style.display = "none";
+    <script>
+        function toggleDropdown() {
+            const menu = document.getElementById("profileMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
         }
-    });
 
-    let bookData = [];
-
-    fetch('http://localhost:5223/api/book/top-selling')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch books');
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest(".profile-dropdown")) {
+                document.getElementById("profileMenu").style.display = "none";
             }
-            return response.json();
-        })
-        .then(data => {
-            bookData = data;
-            renderBookList(bookData);
-        })
-        .catch(error => {
-            console.error(error);
-            document.getElementById('book-list').innerText = `Error: ${error.message}`;
         });
 
-    function renderBookList(books) {
-        const bookList = document.getElementById('book-list');
-        bookList.innerHTML = '';
+        let bookData = [];
 
-        books.forEach(book => {
-            const card = document.createElement('div');
-            card.style.padding = '10px';
-            card.className = 'book-container';
-            card.innerHTML = `
-        <div style="position: relative; overflow: hidden;">
-            <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
-            <div class="bookmark-icon">
-                <i class="fas fa-bookmark"></i>
-            </div>
-        </div>
-        <div class="book-info">
-            <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
-            <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
-            <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
-            <button
-                style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
-                onclick="addToCart('${book.bookId}')">
-                <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
-                <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
-            </button>
-        </div>
-    `;
-            bookList.appendChild(card);
-        });
-    }
-
-    function sortBooks() {
-        const sortValue = document.getElementById('sort').value;
-
-        let sortedBooks;
-
-        if (sortValue === 'price-low-high') {
-            sortedBooks = [...bookData].sort((a, b) => a.price - b.price);
-        } else if (sortValue === 'price-high-low') {
-            sortedBooks = [...bookData].sort((a, b) => b.price - a.price);
-        } else {
-            sortedBooks = [...bookData];
-        }
-
-        renderBookList(sortedBooks);
-    }
-
-    document.getElementById('sort').addEventListener('change', sortBooks);
-
-    function searchBooks() {
-        const searchTerm = document.querySelector('.search-customize').value.toLowerCase();
-        const filteredBooks = bookData.filter(book =>
-            book.title.toLowerCase().includes(searchTerm) ||
-            book.authorName.toLowerCase().includes(searchTerm)
-        );
-        renderBookList(filteredBooks);
-    }
-
-    document.querySelector('.search-customize').addEventListener('input', searchBooks);
-
-    function checkLoginStatus() {
-        const token = localStorage.getItem('jwtToken');
-        console.log('Token:', token);
-
-        if (token) {
-            document.getElementById('cartAndProfile').style.display = 'flex';
-            document.getElementById('loginButton').style.display = 'none';
-        } else {
-            document.getElementById('cartAndProfile').style.display = 'none';
-            document.getElementById('loginButton').style.display = 'block';
-        }
-    }
-
-    window.onload = checkLoginStatus; 
-
-    function checkLoginStatus() {
-        const token = localStorage.getItem('jwtToken');
-        console.log('Token:', token);
-
-        if (token) {
-            document.getElementById('cartAndProfile').style.display = 'flex';
-            document.getElementById('loginButton').style.display = 'none';
-        } else {
-            document.getElementById('cartAndProfile').style.display = 'none';
-            document.getElementById('loginButton').style.display = 'block';
-        }
-    }
-
-    window.onload = checkLoginStatus; 
-
-    function logout() {
-        localStorage.removeItem("jwtToken");
-        localStorage.removeItem("userRole");
-        alert("You have been logged out.");
-        window.location.href = '../login.html';
-    }
-
-    function addToCart(bookId) {
-        console.log("Book ID:", bookId);
-        const token = localStorage.getItem('jwtToken');
-        const userId = localStorage.getItem('userID');
-
-        if (!token) {
-            alert("User not authenticated.");
-            return;
-        }
-
-        if (!userId) {
-            alert('You must be logged in to add items to your cart.');
-            return;
-        }
-
-        const book = bookData.find(b => b.bookId === bookId);
-
-        if (!book) {
-            alert('Book not found!');
-            return;
-        }
-
-        const cartItem = {
-            userId: userId,
-            bookId: book.bookId,
-            quantity: 1
-        };
-
-        fetch("http://localhost:5223/api/cartitem", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(cartItem)
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("Network response was not ok");
-                return res.json();
-            })
-            .then(json => {
-                if (json) {
-                    console.log("Success:", json);
-                    alert(json.message);
-                } else {
-                    console.log("Success: No content returned.");
+        fetch('http://localhost:5223/api/book/top-selling')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch books');
                 }
+                return response.json();
+            })
+            .then(data => {
+                bookData = data ? [data] : [];
+                renderBookList(bookData);
             })
             .catch(error => {
-                console.error("Error adding to cart:", error);
-                alert("Failed to add item to cart");
+                console.error(error);
+                document.getElementById('book-list').innerText = `Error: ${error.message}`;
             });
-    }
-</script>
+
+        function renderBookList(books) {
+            const bookList = document.getElementById('book-list');
+            bookList.innerHTML = '';
+            console.log(userBookmarks);
+
+
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.style.padding = '10px';
+                card.className = 'book-container';
+
+                const isBookmarked = userBookmarks.includes(book.bookId);
+                console.log(`Book ID: ${book.bookId}, Is Bookmarked: ${isBookmarked}`);
+                const bookmarkIconClass = isBookmarked ? 'fas fa-bookmark' : 'far fa-bookmark';
+                const bookmarkIconColor = isBookmarked ? 'red' : 'white';
+
+                card.innerHTML = `
+     <div style="position: relative; overflow: hidden;">
+         <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+         <button class="bookmark-icon" style="border: none; background: none;" onclick="bookmarkBook('${book.bookId}')">
+             <i class="${bookmarkIconClass}" style="color: ${bookmarkIconColor}; font-size: 24px;"></i>
+         </button>
+     </div>
+     <div class="book-info">
+         <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
+         <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
+         <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
+         <button
+             style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
+             onclick="addToCart('${book.bookId}')">
+             <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
+             <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
+         </button>
+     </div>
+ `;
+                bookList.appendChild(card);
+            });
+        }
+
+        function sortBooks() {
+            const sortValue = document.getElementById('sort').value;
+            let sortedBooks = [...bookData];
+
+            if (sortValue === 'price-low-high') {
+                sortedBooks.sort((a, b) => a.price - b.price);
+            } else if (sortValue === 'price-high-low') {
+                sortedBooks.sort((a, b) => b.price - a.price);
+            }
+
+            renderBookList(sortedBooks);
+        }
+
+        document.getElementById('sort').addEventListener('change', sortBooks);
+
+        function searchBooks() {
+            const term = document.querySelector('.search-customize').value.toLowerCase();
+            const filtered = bookData.filter(b =>
+                b.title.toLowerCase().includes(term) ||
+                b.authorName.toLowerCase().includes(term)
+            );
+            renderBookList(filtered);
+        }
+
+        document.querySelector('.search-customize').addEventListener('input', searchBooks);
+
+        function checkLoginStatus() {
+            const token = localStorage.getItem('jwtToken');
+            if (token) {
+                document.getElementById('cartAndProfile').style.display = 'flex';
+                document.getElementById('loginButton').style.display = 'none';
+            } else {
+                document.getElementById('cartAndProfile').style.display = 'none';
+                document.getElementById('loginButton').style.display = 'block';
+            }
+        }
+
+        window.onload = checkLoginStatus;
+
+        function logout() {
+            localStorage.removeItem("jwtToken");
+            localStorage.removeItem("userRole");
+            alert("You have been logged out.");
+            window.location.href = '../login.html';
+        }
+
+        function addToCart(bookId) {
+            const token = localStorage.getItem('jwtToken');
+            const userId = localStorage.getItem('userID');
+
+            if (!token || !userId) {
+                alert('You must be logged in to add items to your cart.');
+                setTimeout(() => {
+                    window.location.href = '../login.html';
+                }, 100); 
+                return;
+            }
+
+            const book = bookData.find(b => b.bookId === bookId);
+            if (!book) {
+                alert('Book not found!');
+                return;
+            }
+
+            const cartItem = {
+                userId: userId,
+                bookId: book.bookId,
+                quantity: 1
+            };
+            fetch("http://localhost:5223/api/cartitem", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify(cartItem)
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error("Network response was not ok");
+                        return res.json();
+                    })
+                    .then(json => {
+                        alert(json.message || "Added to cart.");
+                    })
+                    .catch(error => {
+                        console.error("Error adding to cart:", error);
+                        alert("Failed to add item to cart");
+                    });
+            }
+
+
+        function bookmarkBook(bookId) {
+            const token = localStorage.getItem('jwtToken');
+            const userId = localStorage.getItem('userID');
+
+            if (!token || !userId) {
+                alert("You must be logged in to bookmark a book.");
+                setTimeout(() => {
+                    window.location.href = 'Pages/login.html';
+                }, 100);
+                return;
+            }
+
+            const book = bookData.find(b => b.bookId === bookId);
+            if (!book) {
+                alert("Book not found.");
+                return;
+            }
+
+            const bookmark = {
+                userId: userId,
+                bookId: book.bookId
+            };
+
+            fetch('http://localhost:5223/api/bookmarks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(bookmark)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to bookmark the book.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Book bookmarked successfully!');
+                    loadUserBookmarks();
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('An error occurred while bookmarking the book.');
+                });
+        }
+
+        let userBookmarks = [];
+
+        function loadUserBookmarks() {
+            const token = localStorage.getItem('jwtToken');
+            const userId = localStorage.getItem('userID');
+
+            if (!token || !userId) {
+                console.warn('No token or userId found in localStorage');
+                return;
+            }
+
+            fetch(`http://localhost:5223/api/bookmarks/user/${userId}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    userBookmarks = data.map(b => b.bookId);
+                    renderBookList(bookData);
+                })
+                .catch(err => {
+                    console.error("Failed to load bookmarks", err);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadUserBookmarks();
+        });
+    </script>
+</body>
+</html>

@@ -160,17 +160,11 @@ namespace BookNest.Controllers
         [HttpGet("top-selling")]
         public async Task<ActionResult<GetAllBookDto>> GetTopSellingBook()
         {
-            Console.WriteLine("Top-selling endpoint hit");
-            var topBook = await _bookService.GetTopSellingBook();
+            var book = await _bookService.GetTopSellingBook();
+            if (book == null)
+                return NotFound("No top-selling book found.");
 
-            if (topBook == null)
-            {
-                Console.WriteLine("No top-selling book found.");
-                return NotFound("No sales data available.");
-            }
-
-            Console.WriteLine("Top book: " + topBook.Title);
-            return Ok(topBook);
+            return Ok(book);
         }
 
         [HttpGet("books-with-awards")]
