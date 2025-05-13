@@ -46,13 +46,22 @@ namespace BookNest.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrderById(Guid id)
+        public async Task<IActionResult> GetOrderById(Guid id)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
-            if (order == null)
-                return NotFound();
+            try
+            {
+                var order = await _orderService.GetOrderByIdAsync(id);
+                if (order == null)
+                {
+                    return NotFound(new { message = $"Order with ID {id} not found." });
+                }
 
-            return Ok(order);
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving the order.", details = ex.Message });
+            }
         }
 
         [HttpPost("check-claim-code")]
@@ -83,5 +92,25 @@ namespace BookNest.Controllers
                 return BadRequest(new { message = "Claim code is not a valid integer." });
             }
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetOrdersByUserId(Guid userId)
+        {
+            try
+            {
+                var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+                if (orders == null || orders.Count == 0)
+                {
+                    return NotFound(new { message = $"No orders found for user with ID {userId}." });
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving the orders.", details = ex.Message });
+            }
+        }
+
     }
 }

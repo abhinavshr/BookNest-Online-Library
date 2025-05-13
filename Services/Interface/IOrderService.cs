@@ -14,5 +14,6 @@ namespace BookNest.Services.Interface
         Task<Order?> GetOrderByIdAsync(Guid id);
         Task<ActionResult> CheckClaimCodeAsync(CheckClaimCodeDto checkClaimCodeDto);
         Task UpdateOrderAsync(Order order);
+        Task<List<Order>> GetOrdersByUserIdAsync(Guid userId);
     }
 }
