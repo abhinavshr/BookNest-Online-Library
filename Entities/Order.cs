@@ -1,27 +1,43 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BookNest.Entities
 {
     public class Order
     {
-        [Key] public Guid OrderId { get; set; } = Guid.NewGuid();
+        [Key]
+        public Guid OrderId { get; set; }
 
-        [ForeignKey(nameof(User))] public Guid UserId { get; set; }
+        [Required]
+        public Guid UserId { get; set; }
 
-        public decimal TotalPrice { get; set; }
-
+        [Required]
+        [Column(TypeName = "numeric")]
         public decimal DiscountApplied { get; set; }
 
-        public string ClaimCode { get; set; }
+        [Required]
+        public string OrderDate { get; set; }
 
-        public string Status { get; set; } = "Pending"; // Pending, Cancelled, Completed
+        [Required]
+        [Column(TypeName = "numeric")]
+        public decimal TaxAmount { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
+        [Column(TypeName = "numeric")]
+        public decimal SubTotal { get; set; }
 
-        public DateTime? CancelledAt { get; set; }
+        [Required]
+        [Column(TypeName = "numeric")]
+        public decimal TotalAmount { get; set; }
 
-        public DateTime? CompletedAt { get; set; }
+        [Required]
+        public string Payment { get; set; }
+
+        public string? OrderStatus { get; set; }
+
+        public int? ClaimCode { get; set; }
+
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
-
 }

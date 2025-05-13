@@ -12,7 +12,7 @@
     <div class="navigation-box">
         <div style="flex-direction: row; display: flex;">
             <div class="nav-inside">
-                <a href="index.html">Home</a>
+                <a href="../../index.html">Home</a>
             </div>
             <div class="nav-inside">
                 <a href="best_seller.html">Best Seller</a>
@@ -38,8 +38,8 @@
                 <div class="profile-dropdown">
                     <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
                     <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
-                        <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Profile</a>
-                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="profile.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Profile</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">BookMark</a>
                         <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
                     </div>
                 </div>
@@ -49,154 +49,228 @@
     <div class="main-section">
         <div class="checkout-container">
             <h1>Checkout</h1>
-            
+
             <div class="checkout-steps">
-                <div class="step active">
+                <div class="step active" id="paymentStep">
                     <div class="step-number">1</div>
-                    <div class="step-title">Shipping</div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
                     <div class="step-title">Payment</div>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
+                <div class="step" id="reviewStep">
+                    <div class="step-number">2</div>
                     <div class="step-title">Review</div>
                 </div>
             </div>
-            
+
             <div class="checkout-content">
-                <div class="shipping-form">
-                    <h2>Shipping Information</h2>
+                <div class="payment-form" id="paymentForm">
+                    <h2>Payment Information</h2>
                     <form>
                         <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter your card number">
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" placeholder="Enter your email">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-                            </div>
-                        </div>
-                        
                         <div class="form-group">
-                            <label for="address">Address</label>
-                            <input type="text" id="address" name="address" placeholder="Enter your street address">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY">
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="city">City</label>
-                                <input type="text" id="city" name="city" placeholder="Enter your city">
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State/Province</label>
-                                <input type="text" id="state" name="state" placeholder="Enter your state">
-                            </div>
-                            <div class="form-group">
-                                <label for="zip">ZIP/Postal Code</label>
-                                <input type="text" id="zip" name="zip" placeholder="Enter your ZIP code">
-                            </div>
-                        </div>
-                        
                         <div class="form-group">
-                            <label for="country">Country</label>
-                            <select id="country" name="country">
-                                <option value="">Select your country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="UK">United Kingdom</option>
-                                <option value="IN" selected>India</option>
-                                <option value="AU">Australia</option>
-                            </select>
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="CVV">
                         </div>
-                        
-                        <div class="form-group shipping-method">
-                            <h3>Shipping Method</h3>
-                            <div class="radio-group">
-                                <label class="radio-option">
-                                    <input type="radio" name="shipping" checked>
-                                    <span class="radio-label">Standard Shipping (3-5 business days) - Rs.50</span>
-                                </label>
-                                <label class="radio-option">
-                                    <input type="radio" name="shipping">
-                                    <span class="radio-label">Express Shipping (1-2 business days) - Rs.150</span>
-                                </label>
-                            </div>
-                        </div>
-                        
+
                         <div class="form-actions">
-                            <button type="button" class="back-btn" onclick="window.location.href='cart.html'">Back to Cart</button>
-                            <button type="button" class="continue-btn">Continue to Payment</button>
+                            <button type="button" class="back-btn" onclick="goBackToCart()">Back to Cart</button>
+                            <button type="button" class="continue-btn" onclick="goToReview()">Proceed to Review</button>
                         </div>
                     </form>
                 </div>
-                
+
+                <div class="review-form" id="reviewForm" style="display: none;">
+                    <h2>Review Your Order</h2>
+                    <div id="orderReviewDetails"></div>
+                    <div class="form-actions">
+                        <button type="button" class="back-btn" onclick="goBackToPayment()">Back to Payment</button>
+                        <button type="button" class="continue-btn" onclick="placeOrder()">Place Order</button>
+                    </div>
+                </div>
+
                 <div class="order-summary">
                     <h2>Order Summary</h2>
-                    <div class="summary-items">
-                        <div class="summary-item">
-                            <div class="item-image">
-                                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
-                            </div>
-                            <div class="item-details">
-                                <h4>Modern Spaces</h4>
-                                <p>Rs.896 × 1</p>
-                            </div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="item-image">
-                                <img src="https://m.media-amazon.com/images/I/51xwGSNX-EL._SY425_.jpg" alt="Book Cover">
-                            </div>
-                            <div class="item-details">
-                                <h4>The Silent Patient</h4>
-                                <p>Rs.1,199 × 2</p>
-                            </div>
-                        </div>
-                    </div>
-                    
+                    <div class="summary-items" id="orderSummaryContainer"></div>
+
                     <div class="summary-totals">
                         <div class="total-row">
                             <span>Subtotal</span>
-                            <span>Rs.3,294</span>
-                        </div>
-                        <div class="total-row">
-                            <span>Shipping</span>
-                            <span>Rs.50</span>
+                            <span id="subtotal">Rs.0</span>
                         </div>
                         <div class="total-row">
                             <span>Tax</span>
-                            <span>Rs.329</span>
+                            <span id="tax">Rs.0</span>
                         </div>
                         <div class="total-row grand-total">
                             <span>Total</span>
-                            <span>Rs.3,673</span>
+                            <span id="grandTotal">Rs.0</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        async function loadCartItems() {
+            try {
+                const response = await fetch('http://localhost:5223/api/cartitem');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cart items');
+                }
+
+                const items = await response.json();
+                console.log('Cart Items:', items);
+
+                const container = document.getElementById('orderSummaryContainer');
+                if (!container) {
+                    console.error('Container element not found!');
+                    return;
+                }
+
+                let subtotal = 0;
+                container.innerHTML = "";
+
+                items.forEach(item => {
+                    console.log('Item:', item);
+
+                    const itemHTML = `
+                                <div class="summary-item" data-bookid="${item.bookId}">
+                                    <div class="item-image">
+                                        <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
+                                    </div>
+                                    <div class="item-details">
+                                        <h4>${item.bookTitle}</h4>
+                                        <p>Rs.${item.price} × ${item.quantity}</p>
+                                    </div>
+                                </div>
+                            `;
+                    container.innerHTML += itemHTML;
+                    subtotal += item.price * item.quantity;
+                });
+
+                document.getElementById("subtotal").innerText = `Rs.${subtotal}`;
+                const tax = (subtotal * 0.1).toFixed(0);
+                const grandTotal = subtotal + parseInt(tax);
+                document.getElementById("tax").innerText = `Rs.${tax}`;
+                document.getElementById("grandTotal").innerText = `Rs.${grandTotal}`;
+
+            } catch (error) {
+                console.error('Error loading cart items:', error);
+            }
+        }
+
+        function goToReview() {
+            document.getElementById("paymentForm").style.display = "none";
+            document.getElementById("reviewForm").style.display = "block";
+            document.getElementById("paymentStep").classList.remove("active");
+            document.getElementById("reviewStep").classList.add("active");
+
+            const orderReviewDetails = document.getElementById("orderReviewDetails");
+            const items = document.querySelectorAll('.summary-item');
+            let reviewHTML = '';
+            items.forEach(item => {
+                reviewHTML += item.outerHTML;
+            });
+            orderReviewDetails.innerHTML = reviewHTML;
+        }
+
+        function goBackToPayment() {
+            document.getElementById("reviewForm").style.display = "none";
+            document.getElementById("paymentForm").style.display = "block";
+            document.getElementById("reviewStep").classList.remove("active");
+            document.getElementById("paymentStep").classList.add("active");
+        }
+
+        function goBackToCart() {
+            window.location.href = 'cart.html';
+        }
+
+        loadCartItems();
+
+        async function placeOrder() {
+            const cardNumber = document.getElementById("cardNumber").value;
+            const expiryDate = document.getElementById("expiryDate").value;
+            const cvv = document.getElementById("cvv").value;
+
+            if (!cardNumber || !expiryDate || !cvv) {
+                alert("Please fill in all payment details.");
+                return;
+            }
+
+            const userId = localStorage.getItem('userID');
+            if (!userId) {
+                alert("User is not logged in.");
+                return;
+            }
+
+            const items = await fetchCartItems();
+
+            const orderData = {
+                userId: userId,
+                discountApplied: 0,
+                orderDate: new Date().toISOString(),
+                taxAmount: calculateTax(items),
+                subTotal: calculateSubTotal(items),
+                totalAmount: calculateTotalAmount(items),
+                payment: "CreditCard",
+                orderStatus: "Pending",
+                claimCode: null,
+                cardNumber: cardNumber,
+                items: items.map(item => ({
+                    bookId: item.bookId,
+                    quantity: 1,
+                    discount: item.discount || 0
+                }))
+            };
+
+            try {
+                const response = await fetch('http://localhost:5223/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to place order');
+                }
+
+                const order = await response.json();
+                alert(`Order placed successfully! Your ClaimCode is ${order.claimCode}`);
+                window.location.href = `../../index.html`;
+            } catch (error) {
+                console.error('Error placing order:', error);
+                alert("Failed to place order. Please try again later.");
+            }
+        }
+
+        function calculateSubTotal(items) {
+            return items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        }
+
+        function calculateTax(items) {
+            return calculateSubTotal(items) * 0.1;
+        }
+
+        function calculateTotalAmount(items) {
+            return calculateSubTotal(items) + calculateTax(items);
+        }
+
+        async function fetchCartItems() {
+            const response = await fetch('http://localhost:5223/api/cartitem');
+            if (!response.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+            return await response.json();
+        }
+    </script>
 </body>
 </html>
-
-<script>
-    function toggleDropdown() {
-        var menu = document.getElementById("profileMenu");
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", function (event) {
-        var isClickInside = event.target.closest(".profile-dropdown");
-        if (!isClickInside) {
-            document.getElementById("profileMenu").style.display = "none";
-        }
-    });
-</script>

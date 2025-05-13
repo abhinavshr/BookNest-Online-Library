@@ -41,5 +41,53 @@ namespace BookNest.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<GetAllCartItemDto>>> GetAllCartItems()
+        {
+            var cartItems = await _cartItemService.GetAllCartItems();
+
+            if (cartItems == null || !cartItems.Any())
+            {
+                return NotFound("No cart items found.");
+            }
+
+            return Ok(cartItems);
+        }
+
+        [HttpDelete("{cartItemId}")]
+        public async Task<ActionResult> RemoveCartItem(Guid cartItemId)
+        {
+            try
+            {
+                await _cartItemService.RemoveCartItem(cartItemId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message); 
+            }
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<GetAllCartItemDto>>> GetCartItemsByUser(Guid userId)
+        {
+            try
+            {
+                var cartItems = await _cartItemService.GetCartItemsByUser(userId);
+
+                if (cartItems == null || !cartItems.Any())
+                {
+                    return NotFound(new { message = "No cart items found for the user." });
+                }
+
+                return Ok(cartItems);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+            }
+        }
+
+
     }
 }

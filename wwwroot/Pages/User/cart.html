@@ -12,7 +12,7 @@
     <div class="navigation-box">
         <div style="flex-direction: row; display: flex;">
             <div class="nav-inside">
-                <a href="index.html">Home</a>
+                <a href="../../index.html">Home</a>
             </div>
             <div class="nav-inside">
                 <a href="best_seller.html">Best Seller</a>
@@ -51,65 +51,29 @@
             <h1>Your Shopping Cart</h1>
 
             <div class="cart-items">
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
-                    </div>
-                    <div class="item-details">
-                        <h3>Modern Spaces</h3>
-                        <p class="author">By Francisco Spencer</p>
-                        <p class="price">Rs.896</p>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn">-</button>
-                            <span class="quantity">1</span>
-                            <button class="quantity-btn">+</button>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="remove-btn"><i class="fas fa-trash"></i> Remove</button>
-                        <button class="wishlist-btn"><i class="fas fa-heart"></i> Move to Wishlist</button>
-                    </div>
+                <div class="cart-items" id="cartItemsContainer">
                 </div>
 
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="https://m.media-amazon.com/images/I/51xwGSNX-EL._SY425_.jpg" alt="Book Cover">
-                    </div>
-                    <div class="item-details">
-                        <h3>The Silent Patient</h3>
-                        <p class="author">By Alex Michaelides</p>
-                        <p class="price">Rs.1,199</p>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn">-</button>
-                            <span class="quantity">2</span>
-                            <button class="quantity-btn">+</button>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="remove-btn"><i class="fas fa-trash"></i> Remove</button>
-                        <button class="wishlist-btn"><i class="fas fa-heart"></i> Move to Wishlist</button>
-                    </div>
-                </div>
             </div>
 
             <div class="cart-summary">
                 <div class="summary-card">
                     <h3>Order Summary</h3>
                     <div class="summary-row">
-                        <span>Subtotal (3 items)</span>
-                        <span>Rs.3,294</span>
+                        <span>Subtotal </span>
+                        <span></span>
                     </div>
                     <div class="summary-row">
                         <span>Shipping</span>
-                        <span>Rs.50</span>
+                        <span></span>
                     </div>
                     <div class="summary-row">
                         <span>Tax</span>
-                        <span>Rs.329</span>
+                        <span></span>
                     </div>
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span>Rs.3,673</span>
+                        <span></span>
                     </div>
                     <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
                 </div>
@@ -125,11 +89,79 @@
         menu.style.display = (menu.style.display === "block") ? "none" : "block";
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener("click", function (event) {
         var isClickInside = event.target.closest(".profile-dropdown");
         if (!isClickInside) {
             document.getElementById("profileMenu").style.display = "none";
         }
     });
+
+    async function removeCartItem(cartItemId) {
+        try {
+            const response = await fetch(`http://localhost:5223/api/cartitem/${cartItemId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert("Item removed successfully");
+                loadCartItems(); 
+            } else {
+                alert("Failed to remove item");
+            }
+        } catch (error) {
+            console.error("Error removing item:", error);
+        }
+    }
+
+        async function loadCartItems() {
+        try {
+            const response = await fetch('http://localhost:5223/api/cartitem'); 
+        if (!response.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+
+        const items = await response.json();
+        const container = document.getElementById('cartItemsContainer');
+        container.innerHTML = ""; 
+
+        let total = 0;
+
+            items.forEach(item => {
+                const itemHTML = `
+        <div class="cart-item">
+            <div class="item-image">
+                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
+            </div>
+            <div class="item-details">
+                <h3>${item.bookTitle}</h3>
+                <p class="author">By ${item.author}</p>
+                <p class="price">Rs.${item.price}</p>
+                <div class="quantity-controls">
+                    <span>Quantity: ${item.quantity}</span>
+                </div>
+            </div>
+            <div class="item-actions">
+                <button class="remove-btn" onclick="removeCartItem('${item.cartItemId}')">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+        </div>
+        `;
+        container.innerHTML += itemHTML;
+        total += item.price * item.quantity;
+            });
+
+        document.querySelector(".summary-row:nth-child(2) span:last-child").innerText = `Rs.${total}`;
+        document.querySelector(".summary-row:nth-child(3) span:last-child").innerText = "Rs.50"; 
+        document.querySelector(".summary-row:nth-child(4) span:last-child").innerText = `Rs.${(total * 0.1).toFixed(0)}`; 
+        const grandTotal = total + 50 + total * 0.1;
+        document.querySelector(".summary-row.total span:last-child").innerText = `Rs.${grandTotal.toFixed(0)}`;
+
+        } catch (error) {
+            console.error('Error loading cart items:', error);
+        }
+    }
+
+        loadCartItems();
+
 </script>
