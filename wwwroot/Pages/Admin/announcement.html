@@ -120,7 +120,7 @@
 
                     if (response.ok) {
                         alert('Announcement deleted successfully.');
-                        fetchAnnouncementData(); // Refresh the table
+                        fetchAnnouncementData();
                     } else if (response.status === 404) {
                         alert('Announcement not found.');
                     } else {
