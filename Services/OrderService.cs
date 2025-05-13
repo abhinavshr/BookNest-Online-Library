@@ -83,10 +83,25 @@ namespace BookNest.Services
 
         public async Task<Order?> GetOrderByIdAsync(Guid id)
         {
-            return await _context.Orders
-                .Include(o => o.OrderItems)
-                .FirstOrDefaultAsync(o => o.OrderId == id);
+            try
+            {
+                var order = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+
+                if (order == null)
+                {
+                    throw new KeyNotFoundException($"Order with ID {id} not found.");
+                }
+
+                return order;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the order.", ex);
+            }
         }
+
 
         public async Task UpdateOrderAsync(Order order)
         {
@@ -121,6 +136,15 @@ namespace BookNest.Services
                 return new BadRequestObjectResult("Claim code is not a valid integer.");
             }
         }
+
+        public async Task<List<Order>> GetOrdersByUserIdAsync(Guid userId)
+        {
+            return await _context.Orders
+                                 .Where(o => o.UserId == userId)
+                                 .Include(o => o.OrderItems)
+                                 .ToListAsync();
+        }
+
 
     }
 }
