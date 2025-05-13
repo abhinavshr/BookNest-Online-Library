@@ -1,12 +1,15 @@
 ﻿using BookNest.Dtos;
+using BookNest.Entities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookNest.Services.Interface
 {
     public interface IOrderService
     {
-        void PlaceOrder(InsertOrderDto orderDto);
-        List<GetAllOrderDto> GetOrdersByUser(Guid userId);
-        void CancelOrder(Guid orderId);
-        void CompleteOrder(Guid orderId);
+        Task<Order> CreateOrderAsync(InsertOrderDto dto);
+        Task<List<Order>> GetAllOrdersAsync();
+        Task<Order?> GetOrderByIdAsync(Guid id);
     }
 }
