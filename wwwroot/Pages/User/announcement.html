@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Announcement</title>
+    <link rel="stylesheet" href="../../css/award_winner.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="../../index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+            <div class="nav-inside">
+                <a href="announcement.html" class="active">Announcement</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside" id="cartAndProfile">
+                <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="order.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Orders History</a>
+                        <a href="bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-inside" id="loginButton" style="display: none;">
+                <a href="../login.html" style="color: #fff; background-color: #007bff; padding: 10px; border-radius: 5px;">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-section">
+        <div class="announcement-container">
+            <h2>Announcements</h2>
+            <div id="announcement-list" class="announcement-list">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchActiveAnnouncements();
+        });
+
+        async function fetchActiveAnnouncements() {
+            try {
+                const response = await fetch('http://localhost:5223/api/announcement');
+                if (response.ok) {
+                    const announcements = await response.json();
+                    displayAnnouncements(announcements);
+                } else {
+                    console.error("Failed to fetch announcements:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Error fetching announcements:", error);
+            }
+        }
+
+        function displayAnnouncements(announcements) {
+            const list = document.getElementById('announcement-list');
+            if (announcements.length === 0) {
+                list.innerHTML = "<p>No active announcements available at the moment.</p>";
+            } else {
+                announcements.forEach(announcement => {
+                    const announcementElement = document.createElement('div');
+                    announcementElement.classList.add('announcement');
+                    announcementElement.style.padding = '15px';
+                    announcementElement.style.marginBottom = '20px';
+                    announcementElement.style.border = '1px solid #ddd';
+                    announcementElement.style.borderRadius = '5px';
+                    announcementElement.style.backgroundColor = '#f9f9f9';
+
+                    const header = document.createElement('div');
+                    header.classList.add('announcement-header');
+                    header.style.marginBottom = '10px';
+
+                    const title = document.createElement('h3');
+                    title.innerText = announcement.title;
+                    title.style.fontSize = '18px';
+                    title.style.margin = '0';
+                    title.style.fontWeight = 'bold';
+                    header.appendChild(title);
+
+                    const dateRange = document.createElement('p');
+                    dateRange.innerText = `${announcement.startDate} - ${announcement.endDate}`;
+                    dateRange.style.fontSize = '14px';
+                    dateRange.style.color = '#777';
+                    dateRange.style.margin = '5px 0 0';
+                    header.appendChild(dateRange);
+
+                    const message = document.createElement('p');
+                    message.innerText = announcement.message;
+                    message.style.fontSize = '16px';
+                    message.style.color = '#333';
+
+                    announcementElement.appendChild(header);
+                    announcementElement.appendChild(message);
+
+                    list.appendChild(announcementElement);
+                });
+            }
+        }
+
+
+        function toggleDropdown() {
+            var menu = document.getElementById("profileMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        document.addEventListener("click", function (event) {
+            var isClickInside = event.target.closest(".profile-dropdown");
+            if (!isClickInside) {
+                document.getElementById("profileMenu").style.display = "none";
+            }
+        });
+    </script>
+</body>
+
+</html>

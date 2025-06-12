@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../../css/checkout.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="../../index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+            <div class="nav-inside">
+                <a href="announcement.html">Announcement</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
+            </div>
+            <div class="nav-inside">
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="order.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Orders History</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">BookMark</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-section">
+        <div class="checkout-container">
+            <h1>Checkout</h1>
+
+            <div class="checkout-steps">
+                <div class="step active" id="paymentStep">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Payment</div>
+                </div>
+                <div class="step" id="reviewStep">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Review</div>
+                </div>
+            </div>
+
+            <div class="checkout-content">
+                <div class="payment-form" id="paymentForm">
+                    <h2>Payment Information</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter your card number">
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="CVV">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="back-btn" onclick="goBackToCart()">Back to Cart</button>
+                            <button type="button" class="continue-btn" onclick="goToReview()">Proceed to Review</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="review-form" id="reviewForm" style="display: none;">
+                    <h2>Review Your Order</h2>
+                    <div id="orderReviewDetails"></div>
+                    <div class="form-actions">
+                        <button type="button" class="back-btn" onclick="goBackToPayment()">Back to Payment</button>
+                        <button type="button" class="continue-btn" onclick="placeOrder()">Place Order</button>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <h2>Order Summary</h2>
+                    <div class="summary-items" id="orderSummaryContainer"></div>
+
+                    <div class="summary-totals">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">Rs.0</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax</span>
+                            <span id="tax">Rs.0</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>Total</span>
+                            <span id="grandTotal">Rs.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadCartItems() {
+            try {
+                const response = await fetch('http://localhost:5223/api/cartitem');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cart items');
+                }
+
+                const items = await response.json();
+                console.log('Cart Items:', items);
+
+                const container = document.getElementById('orderSummaryContainer');
+                if (!container) {
+                    console.error('Container element not found!');
+                    return;
+                }
+
+                let subtotal = 0;
+                container.innerHTML = "";
+
+                items.forEach(item => {
+                    console.log('Item:', item);
+
+                    const itemHTML = `
+                                <div class="summary-item" data-bookid="${item.bookId}">
+                                    <div class="item-image">
+                                        <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
+                                    </div>
+                                    <div class="item-details">
+                                        <h4>${item.bookTitle}</h4>
+                                        <p>Rs.${item.price} × ${item.quantity}</p>
+                                    </div>
+                                </div>
+                            `;
+                    container.innerHTML += itemHTML;
+                    subtotal += item.price * item.quantity;
+                });
+
+                document.getElementById("subtotal").innerText = `Rs.${subtotal}`;
+                const tax = (subtotal * 0.1).toFixed(0);
+                const grandTotal = subtotal + parseInt(tax);
+                document.getElementById("tax").innerText = `Rs.${tax}`;
+                document.getElementById("grandTotal").innerText = `Rs.${grandTotal}`;
+
+            } catch (error) {
+                console.error('Error loading cart items:', error);
+            }
+        }
+
+        function goToReview() {
+            document.getElementById("paymentForm").style.display = "none";
+            document.getElementById("reviewForm").style.display = "block";
+            document.getElementById("paymentStep").classList.remove("active");
+            document.getElementById("reviewStep").classList.add("active");
+
+            const orderReviewDetails = document.getElementById("orderReviewDetails");
+            const items = document.querySelectorAll('.summary-item');
+            let reviewHTML = '';
+            items.forEach(item => {
+                reviewHTML += item.outerHTML;
+            });
+            orderReviewDetails.innerHTML = reviewHTML;
+        }
+
+        function goBackToPayment() {
+            document.getElementById("reviewForm").style.display = "none";
+            document.getElementById("paymentForm").style.display = "block";
+            document.getElementById("reviewStep").classList.remove("active");
+            document.getElementById("paymentStep").classList.add("active");
+        }
+
+        function goBackToCart() {
+            window.location.href = 'cart.html';
+        }
+
+        loadCartItems();
+
+        async function placeOrder() {
+            const button = document.querySelector(".continue-btn");
+            button.disabled = true;
+            button.innerText = "Placing Order...";
+
+            try {
+                const cardNumber = document.getElementById("cardNumber").value;
+                const expiryDate = document.getElementById("expiryDate").value;
+                const cvv = document.getElementById("cvv").value;
+
+                if (!cardNumber || !expiryDate || !cvv) {
+                    alert("Please fill in all payment details.");
+                    button.disabled = false;
+                    button.innerText = "Place Order";
+                    return;
+                }
+
+                const userName = localStorage.getItem("UserName");
+                const userEmail = localStorage.getItem("UserEmail");
+                const userId = localStorage.getItem('userID');
+                if (!userId) {
+                    alert("User is not logged in.");
+                    button.disabled = false;
+                    button.innerText = "Place Order";
+                    return;
+                }
+
+                const items = await fetchCartItems();
+
+                const orderData = {
+                    userId: userId,
+                    userName: userName,
+                    userEmail: userEmail,
+                    discountApplied: 0,
+                    orderDate: new Date().toISOString(),
+                    taxAmount: calculateTax(items),
+                    subTotal: calculateSubTotal(items),
+                    totalAmount: calculateTotalAmount(items),
+                    payment: "CreditCard",
+                    orderStatus: "Pending",
+                    claimCode: null,
+                    cardNumber: cardNumber,
+                    items: items.map(item => ({
+                        bookId: item.bookId,
+                        quantity: 1,
+                        discount: item.discount || 0
+                    }))
+                };
+
+                const response = await fetch('http://localhost:5223/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to place order');
+                }
+
+                const order = await response.json();
+
+                await fetch(`http://localhost:5223/api/cartitem/user/${userId}`, {
+                    method: 'DELETE'
+                });
+
+                alert(`Order placed successfully! Your ClaimCode is ${order.claimCode}`);
+                window.location.href = `../../index.html`;
+
+            } catch (error) {
+                console.error('Error placing order:', error);
+                alert("Failed to place order. Please try again later.");
+                button.disabled = false;
+                button.innerText = "Place Order";
+            }
+        }
+
+
+        function calculateSubTotal(items) {
+            return items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        }
+
+        function calculateTax(items) {
+            return calculateSubTotal(items) * 0.1;
+        }
+
+        function calculateTotalAmount(items) {
+            return calculateSubTotal(items) + calculateTax(items);
+        }
+
+        async function fetchCartItems() {
+            const response = await fetch('http://localhost:5223/api/cartitem');
+            if (!response.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+            return await response.json();
+        }
+
+    </script>
+</body>
+</html>

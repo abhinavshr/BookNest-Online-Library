@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Profile</title>
+    <link rel="stylesheet" href="../../css/profile.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="../../index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+            <div class="nav-inside">
+                <a href="announcement.html">Announcement</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
+            </div>
+            <div class="nav-inside">
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="order.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Orders History</a>
+                        <a href="bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="#" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-section">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-image-container">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Profile Picture" class="profile-image">
+                    <div class="edit-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h1>John Doe</h1>
+                    <p class="email">john.doe@example.com</p>
+                    <p class="member-since">Member since: January 2023</p>
+                </div>
+            </div>
+
+            <div class="profile-details">
+                <div class="detail-section">
+                    <h2>Personal Information</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name:</span>
+                        <span class="detail-value">John Michael Doe</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date of Birth:</span>
+                        <span class="detail-value">January 15, 1990</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">+1 (555) 123-4567</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">123 Book Street, Library City, 10001</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h2>Account Settings</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Password:</span>
+                        <span class="detail-value">********</span>
+                        <button class="edit-button">Change</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email Notifications:</span>
+                        <span class="detail-value">Enabled</span>
+                        <button class="edit-button">Edit</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Preferred Language:</span>
+                        <span class="detail-value">English</span>
+                        <button class="edit-button">Change</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reading-stats">
+                <h2>Your Reading Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">127</div>
+                        <div class="stat-label">Books Read</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Currently Reading</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">89</div>
+                        <div class="stat-label">Want to Read</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">356</div>
+                        <div class="stat-label">Total Pages</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        var isClickInside = event.target.closest(".profile-dropdown");
+        if (!isClickInside) {
+            document.getElementById("profileMenu").style.display = "none";
+        }
+    });
+</script>

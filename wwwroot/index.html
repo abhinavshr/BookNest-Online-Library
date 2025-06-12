@@ -1,0 +1,406 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Home</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="index.html" class="active">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="Pages/User/best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="Pages/User/award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="Pages/User/new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="Pages/User/new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="Pages/User/comming_soon.html">Comming Soon</a>
+            </div>
+            <div class="nav-inside">
+                <a href="Pages/User/announcement.html">Announcement</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside" id="cartAndProfile">
+                <a href="Pages/User/cart.html"><span class="material-icons cart-icon">shopping_cart</span></a>
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="Pages/User/order.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Order History</a>
+                        <a href="Pages/User/bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-inside" id="loginButton" style="display: none;">
+                <a href="Pages/login.html" style="color: #fff; background-color: #007bff; padding: 10px; border-radius: 5px;">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-box">
+        <div class="category-box">
+            <div class="category-container">
+                <div style="background-color: #cfcfcf; padding: 14px; display: flex; align-items: center; justify-content: left; border-radius: 10px 10px 0px 0px">
+                    <span style="font-family: Arial; font-size: 14px; font-weight: bold;">Catalog</span>
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Author</span>
+                    <span class="material-icons profile-icon">add</span>
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Genere</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Availability</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Price</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Ratings</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Language</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Format</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 8px 14px 8px 14px;">
+                    <span style="font-family: Arial; font-size: 14px; color: white;">Publisher</span>
+                    <span class="material-icons profile-icon">add</span>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="main-section">
+            <div class="image-container">
+                <img src="https://thespotlightreview.wordpress.com/wp-content/uploads/2011/07/harry-potter-and-the-deathly-hallows-jacket-cover.jpg?w=1024" alt="Sample Image" class="styled-image">
+                <!--   <div style="padding: 5px; ">
+                    <div style="background-color: wheat; display: inline-block; padding: 4px 8px; border-radius: 4px;">
+                        <span style="font-weight: bold;">Best Seller</span>
+                    </div>
+                </div>-->
+            </div>
+
+            <div style=" width: 100%; display: flex; justify-content: space-between; align-items: center; ">
+
+                <div class="search-bar">
+                    <input class="search-customize" type="search" placeholder="Search..." />
+                </div>
+                <div style="padding: 5px; display: flex; flex-direction: row; align-items: center;">
+
+                    <label for="sort" style="font-family: Arial; font-size:15px; margin-right: 5px;">Sort By:</label>
+                    <select id="sort" name="sort" class="styled-select">
+                        <option value="default" selected>Default</option>
+                        <option value="price-low-high">Price: Low to High</option>
+                        <option value="price-high-low">Price: High to Low</option>
+                    </select>
+                </div>
+
+            </div>
+            <div style="width: 100%; display: flex; flex-direction: row; justify-content: center;">
+                <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: center;" id="book-list">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    document.addEventListener("click", function (event) {
+        var isClickInside = event.target.closest(".profile-dropdown");
+        if (!isClickInside) {
+            document.getElementById("profileMenu").style.display = "none";
+        }
+    });
+
+
+    let bookData = [];
+
+    fetch('http://localhost:5223/api/book')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch books');
+            }
+            return response.json();
+        })
+        .then(data => {
+            bookData = data;
+            renderBookList(bookData);
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById('book-list').innerText = 'Failed to load books.';
+        });
+
+    function sortBooks() {
+        const sortValue = document.getElementById('sort').value;
+
+        let sortedBooks;
+
+        if (sortValue === 'price-low-high') {
+            sortedBooks = [...bookData].sort((a, b) => a.price - b.price);
+        } else if (sortValue === 'price-high-low') {
+            sortedBooks = [...bookData].sort((a, b) => b.price - a.price);
+        } else {
+            sortedBooks = [...bookData];
+        }
+
+        renderBookList(sortedBooks);
+    }
+
+    document.getElementById('sort').addEventListener('change', sortBooks);
+
+    function searchBooks() {
+        const searchTerm = document.querySelector('.search-customize').value.toLowerCase();
+        const filteredBooks = bookData.filter(book =>
+            book.title.toLowerCase().includes(searchTerm) ||
+            book.authorName.toLowerCase().includes(searchTerm)
+        );
+        renderBookList(filteredBooks);
+    }
+
+    document.querySelector('.search-customize').addEventListener('input', searchBooks);
+
+    function checkLoginStatus() {
+        const token = localStorage.getItem('jwtToken');
+        const uid = localStorage.getItem('userID');
+        const userName = localStorage.getItem("UserName");
+        const userEmail = localStorage.getItem("UserEmail");
+        console.log('User Name:', userName);
+        console.log('User Email:', userEmail);
+        console.log('User ID:', uid);
+        console.log('Token:', token);
+
+        if (token) {
+            document.getElementById('cartAndProfile').style.display = 'flex';
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('cartAndProfile').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'block';
+        }
+    }
+
+    window.onload = checkLoginStatus; 
+
+    function logout() {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userID");
+        localStorage.removeItem("UserEmail");
+        localStorage.removeItem("UserEmail");
+        alert("You have been logged out.");
+        window.location.href = 'Pages/login.html';
+    }
+
+    function addToCart(bookId) {
+        console.log("Book ID:", bookId);
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token) {
+            alert('You must be logged in to add items to your cart.');
+            setTimeout(() => {
+                window.location.href = 'Pages/login.html';
+            }, 100);
+            return;
+        }
+
+        if (!userId) {
+            alert('You must be logged in to add items to your cart.');
+            return;
+        }
+
+        const book = bookData.find(b => b.bookId === bookId);
+
+        if (!book) {
+            alert('Book not found!');
+            return;
+        }
+
+        const cartItem = {
+            userId: userId,
+            bookId: book.bookId,
+            quantity: 1
+        };
+
+        fetch("http://localhost:5223/api/cartitem", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(cartItem)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Network response was not ok");
+                return res.json();
+            })
+            .then(json => {
+                if (json) {
+                    console.log("Success:", json);
+                    alert(json.message); 
+                } else {
+                    console.log("Success: No content returned.");
+                }
+            })
+            .catch(error => {
+                console.error("Error adding to cart:", error);
+                alert("Failed to add item to cart");
+            });
+    }
+
+    function bookmarkBook(bookId) {
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token || !userId) {
+            alert("You must be logged in to bookmark a book.");
+            setTimeout(() => {
+                window.location.href = 'Pages/login.html';
+            }, 100);
+            return;
+        }
+
+        const book = bookData.find(b => b.bookId === bookId);
+        if (!book) {
+            alert("Book not found.");
+            return;
+        }
+
+        const bookmark = {
+            userId: userId,
+            bookId: book.bookId
+        };
+
+        fetch('http://localhost:5223/api/bookmarks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(bookmark)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to bookmark the book.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Book bookmarked successfully!');
+            })
+            .catch(error => {
+                console.error(error);
+                alert('An error occurred while bookmarking the book.');
+            });
+    }
+
+    let userBookmarks = [];
+
+    function loadUserBookmarks() {
+        const token = localStorage.getItem('jwtToken');
+        const userId = localStorage.getItem('userID');
+
+        if (!token || !userId) {
+            console.warn('No token or userId found in localStorage');
+            return;
+        }
+
+        fetch(`http://localhost:5223/api/bookmarks/user/${userId}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                userBookmarks = data.map(b => b.bookId);
+                renderBookList(bookData);
+            })
+            .catch(err => {
+                console.error("Failed to load bookmarks", err);
+            });
+    }
+
+    function renderBookList(books) {
+        const bookList = document.getElementById('book-list');
+        bookList.innerHTML = '';
+
+
+        books.forEach(book => {
+            const card = document.createElement('div');
+            card.style.padding = '10px';
+            card.className = 'book-container';
+
+            const isBookmarked = userBookmarks.includes(book.bookId);
+            const bookmarkIconClass = isBookmarked ? 'fas fa-bookmark' : 'far fa-bookmark';
+            const bookmarkIconColor = isBookmarked ? 'red' : 'white';
+
+            card.innerHTML = `
+            <div style="position: relative; overflow: hidden;">
+                <a href="Pages/User/bookdetails.html?bookId=${book.bookId}">
+                    <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="${book.title}" class="book-image">
+                </a>
+                <button class="bookmark-icon" style="border: none; background: none;" onclick="bookmarkBook('${book.bookId}')">
+                    <i class="${bookmarkIconClass}" style="color: ${bookmarkIconColor}; font-size: 24px;"></i>
+                </button>
+            </div>
+            <div class="book-info">
+                <label style="font-size: 17px; font-weight: bold; font-family: Arial;">${book.title}</label>
+                <label style="margin-top: 5px; font-size: 14px; font-family: Arial;">By ${book.authorName}</label>
+                <label style="margin-top: 5px; font-size: 17px; font-weight: bold; font-family: Arial;">Rs.${book.price}</label>
+                <button
+                    style="margin-top: 5px; padding: 15px; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: row; background: none; cursor: pointer;"
+                    onclick="addToCart('${book.bookId}')">
+                    <label style="font-size: 14px; font-weight: bold; font-family: Arial; color: black; margin-right: 5px;">Add To Cart</label>
+                    <span class="material-icons" style="color: black; font-size: 16px;">shopping_cart</span>
+                </button>
+            </div>
+        `;
+            bookList.appendChild(card);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadUserBookmarks();
+    });
+
+
+</script>

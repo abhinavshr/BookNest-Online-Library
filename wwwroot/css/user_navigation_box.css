@@ -1,0 +1,30 @@
+﻿.navigation-box {
+    display: flex;
+    padding-left: 35px;
+    padding-right: 35px;
+    padding-top: 18px;
+    padding-bottom: 8px;
+    background-color: #282828;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.cart-icon
+{
+    color: white; 
+    font-size: 18px;
+}
+.profile-icon {
+    color: white;
+    font-size: 20px;
+}
+.navigation-box a{
+    color: white;
+    text-decoration: none;
+    font-family: Arial;
+    font-size: 14px;
+}
+
+.nav-inside{
+    padding: 8px;
+}

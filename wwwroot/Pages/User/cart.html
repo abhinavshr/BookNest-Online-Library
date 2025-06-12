@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="../../css/cart.css" />
+    <link rel="stylesheet" href="../../css/user_navigation_box.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="navigation-box">
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="../../index.html">Home</a>
+            </div>
+            <div class="nav-inside">
+                <a href="best_seller.html">Best Seller</a>
+            </div>
+            <div class="nav-inside">
+                <a href="award_winners.html">Award Winners</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_releases.html">New Releases</a>
+            </div>
+            <div class="nav-inside">
+                <a href="new_arrivals.html">New Arrivals</a>
+            </div>
+            <div class="nav-inside">
+                <a href="comming_soon.html">Comming Soon</a>
+            </div>
+            <div class="nav-inside">
+                <a href="announcement.html">Announcement</a>
+            </div>
+        </div>
+        <div style="flex-direction: row; display: flex;">
+            <div class="nav-inside">
+                <a href="cart.html" class="active"><span class="material-icons cart-icon">shopping_cart</span></a>
+            </div>
+            <div class="nav-inside">
+                <div class="profile-dropdown">
+                    <span class="material-icons profile-icon" onclick="toggleDropdown()">person</span>
+                    <div class="dropdown-content" style="padding-left: 5px; padding-right: 5px;" id="profileMenu">
+                        <a href="order.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">Orders History</a>
+                        <a href="bookmark.html" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a; ">BookMark</a>
+                        <a href="javascript:void(0);" style="color: #2a2a2a; border-bottom: 1px solid #2a2a2a;" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-section">
+        <div class="cart-container">
+            <h1>Your Shopping Cart</h1>
+
+            <div class="cart-items">
+                <div class="cart-items" id="cartItemsContainer">
+                </div>
+
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal </span>
+                        <span></span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span></span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span></span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span></span>
+                    </div>
+                    <button class="checkout-btn" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    document.addEventListener("click", function (event) {
+        var isClickInside = event.target.closest(".profile-dropdown");
+        if (!isClickInside) {
+            document.getElementById("profileMenu").style.display = "none";
+        }
+    });
+
+    async function removeCartItem(cartItemId) {
+        try {
+            const response = await fetch(`http://localhost:5223/api/cartitem/${cartItemId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert("Item removed successfully");
+                loadCartItems(); 
+            } else {
+                alert("Failed to remove item");
+            }
+        } catch (error) {
+            console.error("Error removing item:", error);
+        }
+    }
+
+        async function loadCartItems() {
+        try {
+            const response = await fetch('http://localhost:5223/api/cartitem'); 
+        if (!response.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+
+        const items = await response.json();
+        const container = document.getElementById('cartItemsContainer');
+        container.innerHTML = ""; 
+
+        let total = 0;
+
+            items.forEach(item => {
+                const itemHTML = `
+        <div class="cart-item">
+            <div class="item-image">
+                <img src="https://template.canva.com/EADaopxBna4/1/0/251w-ujD6UPGa9hw.jpg" alt="Book Cover">
+            </div>
+            <div class="item-details">
+                <h3>${item.bookTitle}</h3>
+                <p class="author">By ${item.author}</p>
+                <p class="price">Rs.${item.price}</p>
+                <div class="quantity-controls">
+                    <span>Quantity: ${item.quantity}</span>
+                </div>
+            </div>
+            <div class="item-actions">
+                <button class="remove-btn" onclick="removeCartItem('${item.cartItemId}')">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+        </div>
+        `;
+        container.innerHTML += itemHTML;
+        total += item.price * item.quantity;
+            });
+
+        document.querySelector(".summary-row:nth-child(2) span:last-child").innerText = `Rs.${total}`;
+        document.querySelector(".summary-row:nth-child(3) span:last-child").innerText = "Rs.50"; 
+        document.querySelector(".summary-row:nth-child(4) span:last-child").innerText = `Rs.${(total * 0.1).toFixed(0)}`; 
+        const grandTotal = total + 50 + total * 0.1;
+        document.querySelector(".summary-row.total span:last-child").innerText = `Rs.${grandTotal.toFixed(0)}`;
+
+        } catch (error) {
+            console.error('Error loading cart items:', error);
+        }
+    }
+
+        loadCartItems();
+
+</script>
